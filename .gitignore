@@ -2,3 +2,11 @@
 vod_systems/\.idea/
 
 \.DS_Store
+
+vod_systems/bower_components/bootstrap/
+
+vod_systems/bower_components/jquery/
+
+*.pyc
+
+vod_systems/db\.sqlite3

@@ -1,0 +1,17 @@
+{
+  "name": "vod-systems",
+  "version": "0.0.1",
+  "homepage": " ",
+  "authors": [
+    "Hizni Salih <hizni.salih@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.7"
+  }
+}
