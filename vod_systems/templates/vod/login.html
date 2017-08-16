@@ -1,0 +1,41 @@
+{% extends "./vod/vod-base.html" %}
+{% block content %}
+ <div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-5">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Login</div>
+                <div class="panel-body">
+                    <form action="/vod/login" method="post" id="login-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Username: </label>
+                            <input id="username" type="text" name="username" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password: </label>
+                            <input id="password" type="password" name="password" class="form-control">
+                        </div>
+
+                        <span class="pull-right"><input type="submit" class="btn btn-primary" value="Submit"></span>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

@@ -21,4 +21,5 @@ from vod_systems import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.landing, name='index'),
+    url(r'^vod/', include('vod.urls')),
 ]
