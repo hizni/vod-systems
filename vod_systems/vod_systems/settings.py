@@ -108,3 +108,5 @@ STATICFILES_DIRS = [
 ]
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
