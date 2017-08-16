@@ -1,0 +1,27 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>vod.systems base</title>
+    <meta charset="utf-8">
+
+    <!-- JQuery -->
+
+    <script src="{% static "jquery/dist/jquery.js" %}"></script>
+
+    <!-- Bootstrap -->
+
+    <script type="text/javascript" src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap-theme.min.css" %}">
+
+</head>
+<body>
+    <div id="root" class="container">
+        {% block header %} {% endblock %}
+        {% block content %} {% endblock %}
+        {% block footer %} {% endblock %}
+    </div>
+</body>
+</html>
