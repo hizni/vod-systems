@@ -1,0 +1,13 @@
+sudo: true
+language: python
+python:
+  - "2.7"
+env:
+  - DJANGO=1.8.3
+install:
+- pip install -r vod_systems/requirements.txt
+- pip install -q Django==$DJANGO
+script:
+  - python vod_systems/manage.py makemigrations
+  - python vod_systems/manage.py migrate
+  - python vod_systems/manage.py test vod_systems.tests
