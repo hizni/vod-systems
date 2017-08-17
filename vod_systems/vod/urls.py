@@ -2,5 +2,6 @@ from django.conf.urls import url
 from vod import views
 
 urlpatterns = [
-    url(r'^', views.login),
+    url(r'login', views.login, name='vod-login'),
+    url(r'admin', views.admin_home, name='admin-home'),
 ]

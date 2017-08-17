@@ -1,9 +1,10 @@
-from django.shortcuts import render, render_to_response, RequestContext
+from django.shortcuts import render, redirect
 from django.template import Context
 from django.contrib.auth import authenticate
 from django.template.context_processors import csrf
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 def login(request):
@@ -15,16 +16,13 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return render(request, './vod/admin_home.html')
-            # {'name': request.user.username})
+            return redirect('admin-home')
         else:
             # return render(request, 'vod/login.html', context)
             messages.add_message(request, messages.WARNING, 'User could not be logged in.')
             context.update({'messages': messages.get_messages(request)})
             # messages.success(request, "User could not be logged in.")
             return render(request, './vod/login.html', context)
-
-
     else:
         messages.add_message(request, messages.WARNING, 'Please enter a username and/or password.')
         # messages.success(request, "Please enter a username and/or password.")
@@ -32,8 +30,5 @@ def login(request):
         return render(request, './vod/login.html', context)
 
 
-"""
-def home(request):
-    context = Context({})
-    return render(request, "vod/home.html", context)
-"""
+def admin_home(request):
+    return render(request, "./vod/admin_home.html", {'users': User.objects.all()})
