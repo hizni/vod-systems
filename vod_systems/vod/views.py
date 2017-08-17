@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
+
 from django.template import Context
 from django.contrib.auth import authenticate
 from django.template.context_processors import csrf
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+
+from models import Institution, AliasIdentifier, TransplantType, DataType
 
 
 def login(request):
@@ -16,19 +20,37 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('admin-home')
+            # return redirect('admin-user')
+            return redirect(reverse('admin') + '?context=user')
         else:
             # return render(request, 'vod/login.html', context)
             messages.add_message(request, messages.WARNING, 'User could not be logged in.')
             context.update({'messages': messages.get_messages(request)})
-            # messages.success(request, "User could not be logged in.")
             return render(request, './vod/login.html', context)
     else:
         messages.add_message(request, messages.WARNING, 'Please enter a username and/or password.')
-        # messages.success(request, "Please enter a username and/or password.")
         context.update({'messages': messages.get_messages(request)})
         return render(request, './vod/login.html', context)
 
 
-def admin_home(request):
-    return render(request, "./vod/admin_home.html", {'users': User.objects.all()})
+def admin(request):
+    context_code = request.GET.get('context')
+
+    # gather data
+    if context_code == 'user':
+        data = User.objects.all()
+    elif context_code == 'institution':
+        data = Institution.objects.all()
+    elif context_code == 'alias_identifier':
+        data = AliasIdentifier.objects.all()
+    elif context_code == 'transplant':
+        data = TransplantType.objects.all()
+    elif context_code == 'datatype':
+        data = DataType.objects.all()
+    else:
+        data = []
+
+    context = {'context': context_code, 'data': data}
+    return render(request, "./vod/admin.html", context)
+
+

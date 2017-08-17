@@ -56,17 +56,22 @@
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="...">Institution</a>
+                                        <span class="glyphicon glyphicon-usd"></span><a href="admin?context=institution">Institution</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-user"></span><a href="...">Patient Identifier</a>
+                                        <span class="glyphicon glyphicon-user"></span><a href="admin?context=alias_identifier">Alias Identifier</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a href="...">Something</a>
+                                        <span class="glyphicon glyphicon-tasks"></span><a href="admin?context=transplant_type">Transplant Type</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon glyphicon-tasks"></span><a href="admin?context=data_type">Data Type</a>
                                     </td>
                                 </tr>
                             </table>
@@ -81,13 +86,13 @@
         </div>
         <div class="col-md-9">
 
-        <div class="panel panel-default">
-            <div class="panel-heading">Account
-            </div>
-                <div class="panel-body">
+            <div class="panel panel-default">
 
+                    <div class="panel-heading">{{ context }}
+                    </div>
+                    <div class="panel-body">
 
-                </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -95,6 +100,13 @@
 
 <script>
 
+$('#collapseAccount').on('shown.bs.collapse', function (e) {
+       //call a service here
+    e.stopPropagation();
+    console.log('look the account panel has been shown');
+    window.location="/vod/admin?context=user";
+
+});
 
 
 </script>
