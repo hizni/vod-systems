@@ -4,34 +4,39 @@
     <div class="row">
         <div class="col-md-3">
         <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
+                <div class="panel panel-default" id="accountPanel">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span class="glyphicon glyphicon-user">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseAccount"><span class="glyphicon glyphicon-user">
                             </span>Account</a>
                         </h4>
                     </div>
-                    <div id="collapseThree" class="panel-collapse collapse">
+                    <div id="collapseAccount" class="panel-collapse collapse">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <a href="http://www.jquery2dotnet.com">Change Password</a>
+                                        <a href="..." id="addUser">Add new user</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href="http://www.jquery2dotnet.com">Notifications</a> <span class="label label-info">5</span>
+                                        <a href="...">Change Password</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href="http://www.jquery2dotnet.com">Import/Export</a>
+                                        <a href="...">Notifications</a> <span class="label label-info">5</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-trash text-danger"></span><a href="http://www.jquery2dotnet.com" class="text-danger">
+                                        <a href="...">Import/Export</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon glyphicon-trash text-danger"></span><a href="..." class="text-danger">
                                             Delete Account</a>
                                     </td>
                                 </tr>
@@ -42,31 +47,26 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
-                            </span>Reports</a>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseMetadata"><span class="glyphicon glyphicon-file">
+                            </span>Metadata</a>
                         </h4>
                     </div>
-                    <div id="collapseFour" class="panel-collapse collapse">
+                    <div id="collapseMetadata" class="panel-collapse collapse">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="http://www.jquery2dotnet.com">Sales</a>
+                                        <span class="glyphicon glyphicon-usd"></span><a href="...">Institution</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-user"></span><a href="http://www.jquery2dotnet.com">Customers</a>
+                                        <span class="glyphicon glyphicon-user"></span><a href="...">Patient Identifier</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a href="http://www.jquery2dotnet.com">Products</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-shopping-cart"></span><a href="http://www.jquery2dotnet.com">Shopping Cart</a>
+                                        <span class="glyphicon glyphicon-tasks"></span><a href="...">Something</a>
                                     </td>
                                 </tr>
                             </table>
@@ -74,6 +74,10 @@
                     </div>
                 </div>
             </div>
+
+            <button id="add_cart">Show selected</button>
+            <ul id="output"></ul>
+
         </div>
         <div class="col-md-9">
 
@@ -81,29 +85,17 @@
             <div class="panel-heading">Account
             </div>
                 <div class="panel-body">
-                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Date Joined</th>
-                            <th>Last Login</th>
-                            <th>Active</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for u in users %}
-                        <tr>
-                            <td>{{ u.username }}</td>
-                            <td>{{ u.date_joined }}</td>
-                            <td>{{ u.last_login }}</td>
-                            <td>{{ u.is_active }}</td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+
+
+
+</script>
 {% endblock %}
