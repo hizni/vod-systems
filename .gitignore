@@ -12,3 +12,5 @@ vod_systems/bower_components/jquery/
 vod_systems/db\.sqlite3
 
 vod_systems/bower_components/bootstrap-table/
+
+vod_systems/bower_components/datatables/
