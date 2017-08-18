@@ -3,82 +3,39 @@
  <div class="container">
     <div class="row">
         <div class="col-md-3">
-        <div class="panel-group" id="accordion">
-                <div class="panel panel-default" id="accountPanel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseAccount"><span class="glyphicon glyphicon-user">
-                            </span>Account</a>
-                        </h4>
-                    </div>
-                    <div id="collapseAccount" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <a href="..." id="addUser">Add new user</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="...">Change Password</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="...">Notifications</a> <span class="label label-info">5</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="...">Import/Export</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-trash text-danger"></span><a href="..." class="text-danger">
-                                            Delete Account</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseMetadata"><span class="glyphicon glyphicon-file">
-                            </span>Metadata</a>
-                        </h4>
-                    </div>
-                    <div id="collapseMetadata" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="admin?context=institution">Institution</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-user"></span><a href="admin?context=alias_identifier">Alias Identifier</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a href="admin?context=transplant_type">Transplant Type</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a href="admin?context=data_type">Data Type</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Activities</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-user"></span><a href="admin?context=user">User</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-usd"></span><a href="admin?context=institution">Institution</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-user"></span><a href="admin?context=alias_identifier">Alias Identifier</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-tasks"></span><a href="admin?context=transplant_type">Transplant Type</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-tasks"></span><a href="admin?context=data_type">Data Type</a>
+                        </td>
+                    </tr>
+                </table>
             </div>
+        </div>
 
             <button id="add_cart">Show selected</button>
             <ul id="output"></ul>
@@ -88,25 +45,111 @@
 
             <div class="panel panel-default">
 
-                    <div class="panel-heading">{{ context }}
-                    </div>
-                    <div class="panel-body">
+                <div class="panel-heading">{{ context }}
+                    {% if context == 'user' %}
+                        <div class="pull-right">
+                            <a class="btn btn-info btn-xs" aria-expanded="true" aria-controls="AddUser">
+                                <span class="glyphicon glyphicon-user" > </span>
+                                New User
+                            </a>
+                        </div>
 
-                    </div>
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+
+                    <table id="example" class="display" cellspacing="0" width="100%">
+                        {% if context == 'user' %}
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Staff</th>
+                                <th>Active</th>
+                                <th>Added on</th>
+                                <th>Last login</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in data %}
+                                <tr>
+                                    <td>{{ i.username }}</td>
+                                    <td>{{ i.is_staff }}</td>
+                                    <td>{{ i.is_active }}</td>
+                                    <td>{{ i.date_joined }}</td>
+                                    <td>{{ i.last_login }}</td>
+                                    <td>
+                                        <a class="btn btn-success btn-xs" aria-expanded="true" aria-controls="EditUser">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </a>
+                                        <a class="btn btn-danger btn-xs" aria-expanded="true" aria-controls="DelUser">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                        {% endif %}
+
+                        {% if context == 'institution'  or context == 'alias_identifier' or context == 'transplant_type' or context == 'data_type' %}
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in data %}
+                                <tr>
+                                    <td>{{ i.code }}</td>
+                                    <td>{{ i.description }}</td>
+                                    <td> put active flag here</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% endif %}
+
+
+                    </table>
+
+
+
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+$(document).ready(function() {
 
-$('#collapseAccount').on('shown.bs.collapse', function (e) {
+    $('#example').DataTable({
+            "bFilter": false  // switch of search functionality
+
+    });
+} );
+
+$('#example tbody').on( 'click', 'tr', function () {
+    if ( $(this).hasClass('selected') ) {
+        $(this).removeClass('selected');
+    }
+    else {
+        $('#example').DataTable().$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+    }
+} );
+
+$('#collapseAccount').on('show.bs.collapse', function (e) {
        //call a service here
-    e.stopPropagation();
-    console.log('look the account panel has been shown');
+
+    console.log('look the account panel has been shown {{ context }}');
     window.location="/vod/admin?context=user";
 
+
 });
+
 
 
 </script>
