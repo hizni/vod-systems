@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from models import Institution, AliasIdentifier, TransplantType, DataType
+from forms import ExtendedUserCreationForm
 
 
 def login(request):
@@ -39,18 +40,34 @@ def admin(request):
     # gather data
     if context_code == 'user':
         data = User.objects.all()
+        create_form = ExtendedUserCreationForm()
     elif context_code == 'institution':
         data = Institution.objects.all()
+        create_form = []
     elif context_code == 'alias_identifier':
         data = AliasIdentifier.objects.all()
+        create_form = []
     elif context_code == 'transplant':
         data = TransplantType.objects.all()
+        create_form = []
     elif context_code == 'datatype':
         data = DataType.objects.all()
+        create_form = []
     else:
         data = []
+        create_form = []
 
-    context = {'context': context_code, 'data': data}
+    context = {'context': context_code, 'data': data, 'create_form': create_form}
     return render(request, "./vod/admin.html", context)
+
+
+def add_data(request):
+    if request.method == 'POST':
+        form = ExtendedUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+    return redirect(reverse('admin') + '?context=user')
+
 
 

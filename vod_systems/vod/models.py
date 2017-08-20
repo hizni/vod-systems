@@ -1,7 +1,14 @@
 from django.db import models
 
-# models hold meta data that is used to describe data held in primary tables
 
+GENDER_CHOICES = (
+    ('Male', 'M'),
+    ('Female', 'F'),
+    ('Indeterminate', 'I'),
+    ('Unknown', 'U'),
+)
+
+# metadata - models hold meta data that is used to describe data held in primary tables
 
 class Institution(models.Model):
     code = models.CharField(max_length=20)  #institution code
@@ -22,15 +29,15 @@ class TransplantType(models.Model):
     code = models.CharField(max_length=20) # transplant type
     description = models.CharField(max_length=100)
 
-# primary data
 
+# primary data
 
 class Patient(models.Model):
     surname = models.CharField(max_length=255)
     firstname = models.CharField(max_length=255)
-    gender = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     date_of_birth = models.DateTimeField()
-    date_of_death = models.DateTimeField(null=True)
+    date_of_death = models.DateTimeField(blank=True, null=True)
 
 
 class PatientIdentifier(models.Model):
@@ -48,4 +55,6 @@ class Transplant(models.Model):
     day_zero = models.DateField()
     start_weight = models.FloatField()
     start_renal_function = models.FloatField()
+
+
 

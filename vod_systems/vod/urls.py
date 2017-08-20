@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'login', views.login, name='vod-login'),
 
     url(r'admin', views.admin, name='admin'),
+    url(r'add', views.add_data, name='add'),
 ]
