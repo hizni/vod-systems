@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'vod',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -110,5 +111,5 @@ STATICFILES_DIRS = [
 ]
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

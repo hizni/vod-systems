@@ -1,4 +1,5 @@
 {% extends "./vod/vod-base.html" %}
+
 {% block content %}
  <div class="container">
     <div class="row">
@@ -36,9 +37,6 @@
                 </table>
             </div>
         </div>
-
-            <button id="add_cart">Show selected</button>
-            <ul id="output"></ul>
 
         </div>
         <div class="col-md-9">
@@ -82,7 +80,11 @@
                                     <td>{{ i.date_joined }}</td>
                                     <td>{{ i.last_login }}</td>
                                     <td>
-                                        <a id="btnEdit" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="EditUser" > <!-- data-toggle="modal" data-target="#myModal"> -->
+                                        <a id="btnExp" class="btn btn-info btn-xs" aria-expanded="true" aria-controls="QuestionMeta"
+                                        href="admin?context=user?user_id={{ i.id }}">
+                                            <span class="glyphicon glyphicon-question-sign"></span>
+                                        </a>
+                                        <a id="btnEdit" class="btn btn-success btn-xs" href="/vod/user/edit/{{ i.id }}" aria-expanded="true" aria-controls="EditUser" > <!-- data-toggle="modal" data-target="#myModal"> -->
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
                                         <a id="btnDelete" class="btn btn-danger btn-xs" aria-expanded="true" aria-controls="DelUser">
@@ -111,6 +113,7 @@
                                     <td>{{ i.description }}</td>
                                     <td> put active flag here</td>
                                     <td>
+
                                         <a id="btnEdit" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="EditMeta">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
@@ -132,8 +135,7 @@
 
 
 <div id="myModal2" class="modal fade" tabindex="-1" role="dialog">
-
-     <form method="post" action="/vod/add_data">
+     <form method="post" action="/vod/add_user">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -142,11 +144,22 @@
           </div>
           <div class="modal-body">
 
-            <p>Create a user account</p>
-                {% csrf_token %}
-
-                {{ create_form }}
-
+              {% csrf_token %}
+              {% for error in create_form.non_field_errors %}
+                <div class="form-group has-errors text-danger small">
+                    {{error}}
+                </div>
+              {% endfor %}
+              {% for field in create_form %}
+                <div class="form-group has-errors text-danger small">
+                    {{field.errors}}
+                </div>
+                <div class="form-group has-errors text-danger small">
+                </div>
+                <div class="form-group">
+                    {{ field.label }} <br> {{field}}
+                </div>
+              {% endfor %}
            </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Save changes</button>
@@ -157,6 +170,29 @@
     </form>
 </div><!-- /.modal -->
 
+
+<div id="myModal3" class="modal fade" tabindex="-1" role="dialog">
+     <form method="post" action="/vod/edit_user">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{{ template_title }}</h4>
+          </div>
+          <div class="modal-body">
+
+              {% csrf_token %}
+              {{ form }}
+
+           </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    </form>
+</div><!-- /.modal -->
 <script>
 
 var table;
@@ -167,21 +203,36 @@ $(document).ready(function() {
     });
 } );
 
-$('body').on('click', '#btnEdit', function(){
+$('body').on('click', '#btnEdit', function(ev){
+
     //to get currently row containing the currently clicked button
-    //row  = $(this).parents('tr')[0];
-    var data = table.row($(this).parents('tr')[0]).data();
+    // var data = table.row($(this).parents('tr')[0]).data()
+    //var id = data[0]
 
-    $("#myModal").val(data[0]).modal('show');
-
-    //for row data
-    //alert(data[4]);
+    //ev.preventDefault(); // prevent navigation
+    var url = $(this).data("form");
+    $("#myModal3").modal('show'); // display the modal on url load
+    return false; // prevent the click propagation
 });
 
+
 $('body').on('click','#btnAdd', function(){
-
-
     $("#myModal2").modal('show');
+});
+
+$('body').on('click','#btnExp', function(ev){
+
+    //ev.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "/vod/user/exp/{{ i.id }}",
+        success: function(response) { // on success..
+                    $("#myModal3").modal('show');
+                    //$("#response").html(response); // update the DIV
+                }
+
+    });
+    return false;
 });
 
 </script>
