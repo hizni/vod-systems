@@ -14,3 +14,5 @@ vod_systems/db\.sqlite3
 vod_systems/bower_components/bootstrap-table/
 
 vod_systems/bower_components/datatables/
+
+vod_systems/vod_systems/\.idea/
