@@ -1,10 +1,12 @@
 from django.conf.urls import url
 from vod import views
-
+from vod.views import UserListView, UserCreateView, UserUpdateView, UserDeleteView
 
 urlpatterns = [
     url(r'login', views.login, name='vod-login'),
 
-    url(r'admin', views.admin, name='admin'),
-    url(r'add', views.add_data, name='add'),
+    url(r'^list/$', UserListView.as_view(), name='user-list'),
+    url(r'^create-user/$', UserCreateView.as_view(), name='user-create'),
+    url(r'^update-user/(?P<id>\d+)/$', UserUpdateView.as_view(), name="user-update"),
+    url(r'^delete-user/(?P<id>\d+)/$', UserDeleteView.as_view(), name="user-delete"),
 ]
