@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'vod',
+    'crispy_forms'
 
 )
 

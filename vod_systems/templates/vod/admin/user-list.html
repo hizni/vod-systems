@@ -17,24 +17,26 @@
             <table id="example" class="display" cellspacing="0" width="100%">
                 <thead>
                 <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
                     <th>Username</th>
-                    <th>Staff</th>
-                    <th>Active</th>
+                    <th>Is active</th>
                     <th>Added on</th>
                     <th>Last login</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for i in object_list %}
                     <tr>
-
+                        <td>{{ i.first_name }}</td>
+                        <td>{{ i.last_name }}</td>
                         <td>{{ i.username }}</td>
-                        <td>{{ i.is_staff }}</td>
                         <td>{{ i.is_active }}</td>
                         <td>{{ i.date_joined }}</td>
                         <td>{{ i.last_login }}</td>
                         <td>
+                            <a data-id="{{ i.id }}" class="btn btn-info btn-xs" href="{% url 'user-retire' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-bitcoin"></span></a>
                             <a data-id="{{ i.id }}" class="btn btn-warning btn-xs" href="{% url 'user-update' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-pencil"></span></a>
                             <a data-id="{{ i.id }}" class="btn btn-danger btn-xs" href="{% url 'user-delete' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-trash"></span></a>
                         </td>

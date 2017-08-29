@@ -54,7 +54,7 @@ class UserListView(ListView):
 
 class UserCreateView(CreateView):
     model = User
-    fields = '__all__'
+    fields = ['first_name', 'last_name', 'email', 'username', 'password', 'is_staff', 'is_superuser']
     template_name = './vod/admin/user-create.html'
 
     def form_valid(self, form):
@@ -65,12 +65,29 @@ class UserCreateView(CreateView):
 
 class UserUpdateView(UpdateView):
     model = User
-    fields = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active']
+    fields = ['first_name', 'last_name', 'email', 'username', 'is_staff', 'is_superuser']
     template_name = './vod/admin/user-update.html'
 
     def dispatch(self, *args, **kwargs):
         self.id = kwargs['id']
         return super(UserUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return User.objects.get(id=self.kwargs['id'])
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('user-list')
+
+
+class UserRetireView(UpdateView):
+    model = User
+    template_name = './vod/admin/user-retire.html'
+    fields = ['is_active']
+
+    def dispatch(self, *args, **kwargs):
+        self.id = kwargs['id']
+        return super(UserRetireView, self).dispatch(*args, **kwargs)
 
     def get_object(self, queryset=None):
         return User.objects.get(id=self.kwargs['id'])

@@ -1,5 +1,5 @@
-
-<div class="modal-dialog modal-lg" role="document">
+{% load crispy_forms_tags %}
+<div class="modal-dialog" role="document">
     <form action="{% url 'user-update' object.id %}" method="post" id="user-update" class="form">
         {% csrf_token %}
         <div class="modal-content">
@@ -11,7 +11,7 @@
                 <h4 class="modal-title">Edit User</h4>
             </div>
             <div class="modal-body">
-                {{ form }}
+                {% crispy form %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -1,6 +1,6 @@
-
-<div class="modal-dialog modal-lg" role="document">
-    <form action="{% url 'user-create' %}" method="post" id="feedback-create" class="form">
+{% load crispy_forms_tags %}
+<div class="modal-dialog" role="document">
+    <form action="{% url 'user-create' %}" method="post" id="feedback-create" >
         {% csrf_token %}
         <div class="modal-content">
             <div class="modal-header">
@@ -11,21 +11,9 @@
                 <h4 class="modal-title">Add User</h4>
             </div>
             <div class="modal-body">
-                {% for error in form.non_field_errors %}
-                <div class="form-group has-errors text-danger small">
-                    {{error}}
-                </div>
-                {% endfor %}
-                {% for field in form %}
-                <div class="form-group has-errors text-danger small">
-                    {{field.errors}}
-                </div>
-                <div class="form-group has-errors text-danger small">
-                </div>
-                <div class="form-group">
-                    {{ field.label }} <br> {{field}}
-                </div>
-                {% endfor %}
+
+                {% crispy form %}
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
