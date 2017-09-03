@@ -7,11 +7,11 @@ from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-
+from django.http.response import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from models import Institution, AliasIdentifier, TransplantType, DataType
-from forms import ExtendedUserCreationForm
+from .forms import SimpleForm
+from parsley.decorators import parsleyfy
 
 
 def login(request):
@@ -40,7 +40,8 @@ User model Class Based Views
     UserCreateView  - create a new user
     UserListView    - list all the users
     UserUpdateView  - update a select user
-    UserDeleteView  - delete the selected user 
+    UserDeleteView  - delete the selected user
+    UserRetireView  - activate/deactivate the selected user 
 """
 
 
@@ -50,6 +51,27 @@ class UserListView(ListView):
 
     def get_queryset(self):
         return User.objects.all()
+
+
+class AnotherCreateView(CreateView):
+    form_class = parsleyfy(SimpleForm)
+    template_name = './vod/admin/generic-modal.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('user-list')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,))
 
 
 class UserCreateView(CreateView):
