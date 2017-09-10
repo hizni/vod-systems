@@ -22,14 +22,16 @@ class SimpleForm(ModelForm):
         super(SimpleForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
+
         self.helper.form_id = 'form'
         self.helper.form_action = '.'
         self.helper.form_class = 'generic-modal'
+        self.helper.form_show_labels = True
         self.helper.attrs = {'data-validate-parsley': 'parsley'}
         self.helper.layout = Layout(
-            Field('username',  id="username", required=True, form_class="has_warning"),
-            Field('password', id="password", required=True),
-            Field('confirm_password', id="confirm_password", required=True, data_parsley_equalto="#password"),
+            Field('username',  id='username', required=True),
+            Field('password', id='password', required=True),
+            Field('confirm_password', id="confirm_password", required=True, data_parsley_equalto="#password")
         )
         # self.helper.add_input(Submit('submit', 'Submit'))
 
