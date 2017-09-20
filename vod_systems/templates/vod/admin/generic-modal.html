@@ -1,58 +1,54 @@
-{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 <div class="modal-dialog" role="document">
-{% comment %}
-    {% csrf_token %}
-    {% crispy form %}
- {% endcomment %}
-    <form id="form" data-parsley-validate="">
-        {% csrf_token %}
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title">Add User</h4>
-            </div>
-            <div class="modal-body">
-
-                <div class="bs-callout bs-callout-warning hidden">
-                    <h4>Oh snap!</h4>
-                    <p>This form seems to be invalid :(</p>
-                </div>
-
-                <div class="bs-callout bs-callout-info hidden">
-                  <h4>Yay!</h4>
-                  <p>Everything seems to be ok :)</p>
-                </div>
-
-                {{ form | crispy}}
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" value="Save changes" />
-            </div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Add User</h4>
         </div>
-    </form>
+        <div class="modal-body">
+
+            {% crispy form %}
+        </div>
+    </div>
 </div><!-- /.modal-dialog -->
 
+<!--
 <script>
 
     $(function () {
       $('#form').parsley()
-        .on('field:validated', function() {
+        //.on('field:validated', function() {
 
-        console.log('Validation failed for: ', this.$element);
         //this.$element.css('background-color', 'red')
         //this.$element.css('background-color', 'green')
         //this.$element.css('background-color', '')
-        var ok = $('.parsley-error').length === 0;
-        $('.bs-callout-info').toggleClass('hidden', !ok);
-        $('.bs-callout-warning').toggleClass('hidden', ok);
+
+        //var ok = $('.parsley-error').length === 0;
+        //$('.bs-callout-info').toggleClass('hidden', !ok);
+        //$('.bs-callout-warning').toggleClass('hidden', ok);
+      //})
+
+      /*
+      .on('form:validate', function(formInstance){
+          var ok = formInstance.isValid();
+
+
       })
-      .on('form:submit', function() {
-        return false; // Don't submit form for this demo
+      */
+      .on('form:submit', function(e) {
+        //return false; // Don't submit form for this demo
+
+          e.preventDefault();
+          var form = $(this);
+          form.parsley().validate();
+          if (form.parsley().isValid()){
+              alert('valid');
+          }
       });
+
     });
 </script>
+-->

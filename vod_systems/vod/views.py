@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from .forms import SimpleForm
+from .forms import UserForm
 from parsley.decorators import parsleyfy
 
 
@@ -54,17 +54,37 @@ class UserListView(ListView):
 
 
 class AnotherCreateView(CreateView):
-    form_class = parsleyfy(SimpleForm)
+    form_class = parsleyfy(UserForm)
     template_name = './vod/admin/generic-modal.html'
 
     def post(self, request, *args, **kwargs):
         self.object = None
+
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('user-list')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,))
+
+
+class AnotherUpdateView(UpdateView):
+    form_class = parsleyfy(UserForm)
+    template_name = './vod/admin/generic-modal.html'
+
+    def dispatch(self, *args, **kwargs):
+        self.id = kwargs['id']
+        return super(AnotherUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return User.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()

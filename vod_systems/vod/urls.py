@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from vod import views
 from vod.views import UserListView, UserCreateView, UserUpdateView, \
-    UserDeleteView, UserRetireView, AnotherCreateView
+    UserDeleteView, UserRetireView, AnotherCreateView, AnotherUpdateView
 
 urlpatterns = [
     url(r'login', views.login, name='vod-login'),
@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^delete-user/(?P<id>\d+)/$', UserDeleteView.as_view(), name="user-delete"),
 
     url(r'^generic-modal/$', AnotherCreateView.as_view(), name='generic-modal'),
+    url(r'^generic-modal-update/(?P<id>\d+)/$', AnotherUpdateView.as_view(), name='generic-modal-update'),
 ]
