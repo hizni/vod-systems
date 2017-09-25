@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from .forms import UserForm
+from .forms import UserCreateForm, UserUpdateForm
 from parsley.decorators import parsleyfy
 
 
@@ -54,8 +54,9 @@ class UserListView(ListView):
 
 
 class AnotherCreateView(CreateView):
-    form_class = parsleyfy(UserForm)
+    form_class = parsleyfy(UserCreateForm)
     template_name = './vod/admin/generic-modal.html'
+    view_title = 'Create new user'
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -76,22 +77,37 @@ class AnotherCreateView(CreateView):
 
 
 class AnotherUpdateView(UpdateView):
-    form_class = parsleyfy(UserForm)
+    form_class = parsleyfy(UserUpdateForm)
+    model = User
     template_name = './vod/admin/generic-modal.html'
+    view_title = 'Update existing user'
+    success_url = 'list'
 
-    def dispatch(self, *args, **kwargs):
-        self.id = kwargs['id']
-        return super(AnotherUpdateView, self).dispatch(*args, **kwargs)
+    # def dispatch(self, *args, **kwargs):
+    #    self.id = kwargs['id']
+    #    return super(AnotherUpdateView, self).dispatch(*args, **kwargs)
 
     def get_object(self, queryset=None):
         return User.objects.get(id=self.kwargs['id'])
 
+    def post(self, request, *args, **kwargs):
+        # self.object = None
+        self.object = User.objects.get(id=self.kwargs['id'])
+
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
     def form_valid(self, form):
-        form.save()
-        return redirect('user-list')
+        self.object = form.save()
+        return HttpResponseRedirect(self.get_success_url())
+        #return redirect('user-list')
 
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,))
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class UserCreateView(CreateView):

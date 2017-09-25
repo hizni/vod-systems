@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^delete-user/(?P<id>\d+)/$', UserDeleteView.as_view(), name="user-delete"),
 
     url(r'^generic-modal/$', AnotherCreateView.as_view(), name='generic-modal'),
-    url(r'^generic-modal-update/(?P<id>\d+)/$', AnotherUpdateView.as_view(), name='generic-modal-update'),
+    url(r'^generic-update/(?P<id>\d+)/$', AnotherUpdateView.as_view(), name='generic-update'),
 ]
