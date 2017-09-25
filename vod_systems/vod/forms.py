@@ -106,7 +106,7 @@ class UserUpdateForm(ModelForm):
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
-        self.helper.form_action = 'list'
+        self.helper.form_action = reverse('generic-update', args=[kwargs['id']])
         self.helper.form_method = 'post'
         self.helper.form_class = 'generic-modal'
         self.helper.form_show_labels = True

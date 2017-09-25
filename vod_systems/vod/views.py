@@ -81,7 +81,6 @@ class AnotherUpdateView(UpdateView):
     model = User
     template_name = './vod/admin/generic-modal.html'
     view_title = 'Update existing user'
-    success_url = 'list'
 
     # def dispatch(self, *args, **kwargs):
     #    self.id = kwargs['id']
@@ -103,8 +102,7 @@ class AnotherUpdateView(UpdateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        return HttpResponseRedirect(self.get_success_url())
-        #return redirect('user-list')
+        return redirect('user-list')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
