@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, MultiField, Submit, Div
 from crispy_forms.bootstrap import FormActions
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 
 
 class UserCreateForm(ModelForm):
@@ -101,18 +101,20 @@ class UserUpdateForm(ModelForm):
         # fields = ['username', 'password', 'confirm_password']
 
     def __init__(self, *args, **kwargs):
-        super(UserUpdateForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
-
         self.helper.form_id = 'form'
-        self.helper.form_action = reverse('generic-update', args=[kwargs['id']])
         self.helper.form_method = 'post'
-        self.helper.form_class = 'generic-modal'
+        # self.helper.form_action = reverse('generic-update', kwargs={'id': 2})
+        self.helper.form_action = ""
+
         self.helper.form_show_labels = True
         self.helper.help_text_inline = True
         self.helper.form_show_errors = True
         self.helper.attrs = {'data-validate': 'parsley'}
+
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+
         self.helper.layout = Layout(
             # Layout of crispy-forms
             # Default: required = false
@@ -149,6 +151,8 @@ class UserUpdateForm(ModelForm):
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Submit('cancel', 'Cancel'),
             )
+
+
         )
 
 
