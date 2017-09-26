@@ -10,7 +10,6 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from forms import UserCreateForm, UserUpdateForm
-from crispy_forms.helper import FormHelper
 from parsley.decorators import parsleyfy
 
 
@@ -58,19 +57,9 @@ class AnotherCreateView(CreateView):
     template_name = './vod/admin/generic-modal.html'
     view_title = 'Create new user'
 
-    def post(self, request, *args, **kwargs):
-        self.object = None
-
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
     def form_valid(self, form):
         form.save()
-        return reverse('user-list')
+        return redirect('user-list')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form,))
@@ -82,23 +71,16 @@ class AnotherUpdateView(UpdateView):
     model = User
     template_name = './vod/admin/generic-modal.html'
     view_title = 'Update existing user'
+    selected_pk = 0
+
+    def get_form(self, form_class=None):
+        form = super(AnotherUpdateView, self).get_form(form_class)
+        form.helper.form_action = reverse('generic-update', kwargs={'id': self.selected_pk})
+        return form
 
     def get_object(self, queryset=None):
+        self.selected_pk = self.kwargs['id']
         return User.objects.get(id=self.kwargs['id'])
-
-    def get_success_url(self, *args, **kwargs):
-        return redirect('user-list')
-
-    def post(self, request, *args, **kwargs):
-
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        form.helper.form_action = reverse('generic-update', kwargs={'id': 2})
-
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
     def form_valid(self, form):
         form.save()
