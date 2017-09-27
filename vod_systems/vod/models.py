@@ -20,17 +20,19 @@ class Institution(models.Model):
 class AliasIdentifier(models.Model):
     code = models.CharField(max_length=20) # identifier type
     description = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
 
 
 class DataType(models.Model):
     code = models.CharField(max_length=20)  # units
     description = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
 
 
 class TransplantType(models.Model):
     code = models.CharField(max_length=20) # transplant type
     description = models.CharField(max_length=100)
-
+    is_active = models.BooleanField(default=True)
 
 # primary data
 

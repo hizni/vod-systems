@@ -1,0 +1,70 @@
+{% extends './vod/vod-base.html' %}
+{% block sidebar %}
+    {% include './vod/admin/sidebar.html' %}
+{% endblock %}
+{% block main-content %}
+<div class="panel panel-default">
+    <div class="panel-heading">Alias Identifiers
+        <div class="pull-right">
+            <a id="btnAdd" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreateAliasId" data-toggle="modal" data-target="#modal" href="{% url 'alias-id-create' %}">
+                <span class="glyphicon glyphicon-buildings" > </span>
+                New Alias
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+            <!-- main window content will be displayed here -->
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>Is active</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for i in object_list %}
+                    <tr>
+                        <td>{{ i.code }}</td>
+                        <td>{{ i.description }}</td>
+                        <td>{{ i.is_active }}</td>
+                        <td>
+                            <a data-id="{{ i.id }}" class="btn btn-info btn-xs" href="{% url 'alias-id-update' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a data-id="{{ i.id }}" class="btn btn-danger btn-xs" href="{% url 'alias-id-retire' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="modal fade" id="modal"></div>
+    </div>
+</div>
+
+<script>
+
+var table;
+$(document).ready(function() {
+    table = $('#example').DataTable({
+        "bFilter": false  // switch of search functionality
+    });
+
+} );
+
+//script that handles the viewing of the modal CBVs
+$('#modal').on('show.bs.modal', function (event) {
+
+    var modal = $(this)
+    $.ajax({
+        url: $(event.relatedTarget).attr('href'),
+        context: document.body
+    }).done(function(response) {
+        modal.html(response);
+        $(this).removeData('bs.modal');
+    });
+});
+
+
+</script>
+{% endblock %}

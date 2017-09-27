@@ -7,12 +7,12 @@ from django.core.urlresolvers import reverse
 from institution_forms import InstitutionCreateUpdateForm, InstitutionRetireForm
 from parsley.decorators import parsleyfy
 """
-User model Class Based Views
-    UserListView    - list all the users
+Institution model Class Based Views
+    InstitutionListView    - list all the institutions
 
-    UserCreateView  - create a new user
-    UserUpdateView  - update a select user
-    UserRetireView  - activate/deactivate the selected user 
+    InstitutionCreateView  - create a new institution
+    InstitutionUpdateView  - update a selected institution
+    InstitutionRetireView  - activate/deactivate the selected institution 
 """
 
 
@@ -71,7 +71,7 @@ class InstitutionRetireView(UpdateView):
 
     def get_form(self, form_class=None):
         form = super(InstitutionRetireView, self).get_form(form_class)
-        form.helper.form_action = reverse('user-retire', kwargs={'id': self.selected_pk})
+        form.helper.form_action = reverse('institution-retire', kwargs={'id': self.selected_pk})
         return form
 
     def get_object(self, queryset=None):
@@ -80,7 +80,7 @@ class InstitutionRetireView(UpdateView):
 
     def form_valid(self, form):
         form.save()
-        return redirect('user-list')
+        return redirect('institution-list')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form, ))

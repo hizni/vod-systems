@@ -1,24 +1,24 @@
 from django.forms import ModelForm
-from models import Institution
+from models import DataType
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
 from crispy_forms.bootstrap import FormActions
 from django.core.urlresolvers import reverse
 
 
-class InstitutionCreateUpdateForm(ModelForm):
+class DatatypeCreateUpdateForm(ModelForm):
 
     class Meta:
-        model = Institution
+        model = DataType
         fields = ['code', 'description']
 
     def __init__(self, *args, **kwargs):
-        super(InstitutionCreateUpdateForm, self).__init__(*args, **kwargs)
+        super(DatatypeCreateUpdateForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
-        self.helper.form_action = reverse('institution-create')
+        self.helper.form_action = reverse('datatype-create')
         self.helper.form_method = 'post'
         self.helper.form_class = 'generic-modal'
         self.helper.form_show_labels = True
@@ -40,7 +40,7 @@ class InstitutionCreateUpdateForm(ModelForm):
                   ),
             Field('description',
                   id='description',
-                  data_parsley_length="[0,100]",
+                  data_parsley_length="[0,255]",
                   data_parsley_trigger='change'
                   ),
 
@@ -51,14 +51,14 @@ class InstitutionCreateUpdateForm(ModelForm):
         )
 
 
-class InstitutionRetireForm(ModelForm):
+class DatatypeRetireForm(ModelForm):
 
     class Meta:
-        model = Institution
+        model = DataType
         fields = ['is_active']
 
     def __init__(self, *args, **kwargs):
-        super(InstitutionRetireForm, self).__init__(*args, **kwargs)
+        super(DatatypeRetireForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
         self.helper.form_id = 'form'
