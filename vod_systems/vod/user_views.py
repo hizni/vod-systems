@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 
-from forms import UserCreateForm, UserUpdateForm, UserRetireForm
+from user_forms import UserCreateForm, UserUpdateForm, UserRetireForm
 from parsley.decorators import parsleyfy
 
 
@@ -94,7 +94,7 @@ class UserRetireView(UpdateView):
     form_class = parsleyfy(UserRetireForm)
     model = User
     template_name = './vod/admin/generic-modal.html'
-    view_title = 'User account status'
+    view_title = 'User active status'
     selected_pk = 0
 
     def get_form(self, form_class=None):

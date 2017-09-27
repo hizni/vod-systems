@@ -1,11 +1,10 @@
-from crispy_forms.bootstrap import PrependedText
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Fieldset, MultiField, Submit, Div, HTML, Button
+from crispy_forms.layout import Layout, Field, Submit, HTML, Button
 from crispy_forms.bootstrap import FormActions
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 
 
 class UserCreateForm(ModelForm):

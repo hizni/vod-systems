@@ -14,6 +14,7 @@ GENDER_CHOICES = (
 class Institution(models.Model):
     code = models.CharField(max_length=20)  # institution code
     description = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
 
 
 class AliasIdentifier(models.Model):
