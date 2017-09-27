@@ -39,13 +39,10 @@
       })
       */
       .on('form:submit', function(e) {
-        //return false; // Don't submit form for this demo
-
           e.preventDefault();
           var form = $(this);
           form.parsley().validate();
       });
-
     });
 </script>
 

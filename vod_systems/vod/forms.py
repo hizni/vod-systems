@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Fieldset, MultiField, Submit, Div
+from crispy_forms.layout import Layout, Field, Fieldset, MultiField, Submit, Div, HTML, Button
 from crispy_forms.bootstrap import FormActions
 from django.core.urlresolvers import reverse, reverse_lazy
 
@@ -16,12 +16,11 @@ class UserCreateForm(ModelForm):
     # but the error text message does seem to get set here..... html5 error message?
     username = forms.CharField(help_text='')
     password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Password Check', help_text='Try to type in the same password....')
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Password Check', help_text='Re-enter the password..')
 
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password', 'confirm_password', 'is_staff', 'is_superuser']
-        # fields = ['username', 'password', 'confirm_password']
 
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
@@ -29,7 +28,7 @@ class UserCreateForm(ModelForm):
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
-        self.helper.form_action = reverse('generic-modal')
+        self.helper.form_action = reverse('user-create')
         self.helper.form_method = 'post'
         self.helper.form_class = 'generic-modal'
         self.helper.form_show_labels = True
@@ -71,7 +70,7 @@ class UserCreateForm(ModelForm):
                   data_parsley_equalto="#password",
                   data_parsley_trigger='change',
 
-                  error_message="Your passwords do not match."),
+                  error_message="The passwords do not match."),
 
             Field('is_staff',
                   id='is_staff'
@@ -82,7 +81,46 @@ class UserCreateForm(ModelForm):
 
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
-                Submit('cancel', 'Cancel'),
+                Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
+            )
+        )
+
+
+class UserRetireForm(ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['is_active']
+
+    def __init__(self, *args, **kwargs):
+        super(UserRetireForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_id = 'form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = ""
+
+        self.helper.form_show_labels = True
+        self.helper.help_text_inline = True
+        self.helper.form_show_errors = True
+        self.helper.attrs = {'data-validate': 'parsley'}
+
+        self.helper.layout = Layout(
+            # Layout of crispy-forms
+            # Default: required = false
+            # Other validation criteria then get applied if data is filled in.
+            # See parsleyjs documentation: http://parsleyjs.org/doc/
+            #   data_parsley_length="[minimum-value,maximum-value]"
+
+            HTML("Currently {{object.first_name}} {{object.last_name}} has the following activity status: "),
+            Field('is_active',
+                  id='is_active'
+                  ),
+
+            FormActions(
+                Submit('save_changes', 'Save changes', css_class="btn-primary align-right"),
+                # Submit('cancel', 'Cancel'),
+                Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
             )
         )
 
@@ -105,7 +143,6 @@ class UserUpdateForm(ModelForm):
         self.helper = FormHelper()
         self.helper.form_id = 'form'
         self.helper.form_method = 'post'
-        # self.helper.form_action = reverse('generic-update', kwargs={'id': 2})
         self.helper.form_action = ""
 
         self.helper.form_show_labels = True
@@ -149,10 +186,8 @@ class UserUpdateForm(ModelForm):
 
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
-                Submit('cancel', 'Cancel'),
+                Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
             )
-
-
         )
 
 
