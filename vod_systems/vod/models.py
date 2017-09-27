@@ -10,8 +10,9 @@ GENDER_CHOICES = (
 
 # metadata - models hold meta data that is used to describe data held in primary tables
 
+
 class Institution(models.Model):
-    code = models.CharField(max_length=20)  #institution code
+    code = models.CharField(max_length=20)  # institution code
     description = models.CharField(max_length=100)
 
 

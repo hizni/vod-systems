@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.7",
-    "datatables": "~1.10.15"
+    "datatables": "~1.10.15",
+    "parsleyjs": "~2.7.2"
   }
 }

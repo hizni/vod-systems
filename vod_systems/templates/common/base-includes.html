@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>vod.systems base</title>
+    <title>{% block title %}vod.systems base-includes template{% endblock %}</title>
     <meta charset="utf-8">
 
     <!-- JQuery -->
@@ -11,16 +11,19 @@
     <script type="text/javascript" src="{% static "datatables/media/js/jquery.js" %}"></script>
 
     <!-- Bootstrap -->
-
     <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap-theme.min.css" %}">
     <script type="text/javascript" src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
 
+    <!-- custom Bootstrap callout -->
+    <link rel="stylesheet" href="{% static "bootstrap-callout.css" %}">
+
+    <!-- ParsleyJS -->
+    <script type="text/javascript" src="{% static "parsleyjs/dist/parsley.js" %}"></script>
+
     <!-- DataTables -->
     <script type="text/javascript" src="{% static "datatables/media/js/jquery.dataTables.js" %}"></script>
     <link rel="stylesheet" href="{% static "datatables/media/css/jquery.dataTables.min.css" %}">
-
-
 </head>
 <body>
     <div id="root" class="container">
