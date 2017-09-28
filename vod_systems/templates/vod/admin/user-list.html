@@ -1,12 +1,6 @@
 {% extends './vod/vod-base.html' %}
 {% block sidebar %}
-    {% if user.is_superuser == True %}
-        welcome super user!
-    {% endif %}
 
-    {% if user.is_staff == True %}
-        hi staff member
-    {% endif %}
     {% include './vod/admin/sidebar.html' %}
 {% endblock %}
 {% block main-content %}

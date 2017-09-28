@@ -63,8 +63,10 @@ class UserCreateView(CreateView):
         user.set_password(user.password)
         user.save()
 
-        return redirect('user-list')
-
+        if (user.is_superuser):
+            return redirect('user-list')
+        else:
+            return redirect('user-list')
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form,))
 

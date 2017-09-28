@@ -9,6 +9,7 @@ from vod.transplant_views import TransplantListView, TransplantCreateView, Trans
 urlpatterns = [
     url(r'login', user_views.login, name='vod-login'),
 
+    # url routes for superuser (admin) related views
     url(r'^user/list/$', UserListView.as_view(), name='user-list'),
     url(r'^user/create/$', UserCreateView.as_view(), name='user-create'),
     url(r'^user/update/(?P<id>\d+)/$', UserUpdateView.as_view(), name='user-update'),
@@ -33,4 +34,7 @@ urlpatterns = [
     url(r'^transplant/create/$', TransplantCreateView.as_view(), name='transplant-create'),
     url(r'^transplant/update/(?P<id>\d+)/$', TransplantUpdateView.as_view(), name='transplant-update'),
     url(r'^transplant/delete/(?P<id>\d+)/$', TransplantRetireView.as_view(), name='transplant-retire'),
+
+    # url routes for staff (normal user) related views
+    # url(r'^patient/list/$', PatientListView.as_view(), name='patient-list'),
 ]
