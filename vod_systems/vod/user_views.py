@@ -58,7 +58,11 @@ class UserCreateView(CreateView):
     view_title = 'Create new user'
 
     def form_valid(self, form):
-        form.save()
+
+        user = form.save()
+        user.set_password(user.password)
+        user.save()
+
         return redirect('user-list')
 
     def form_invalid(self, form):
