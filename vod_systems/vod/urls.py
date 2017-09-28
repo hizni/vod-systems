@@ -4,6 +4,7 @@ from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRet
 from vod.institution_views import InstitutionListView, InstitutionCreateView, InstitutionUpdateView, InstitutionRetireView
 from vod.alias_id_views import AliasIdListView, AliasIdCreateView, AliasIdUpdateView, AliasIdRetireView
 from vod.datatype_views import DataTypeListView, DataTypeCreateView, DataTypeUpdateView, DataTypeRetireView
+from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 
 urlpatterns = [
     url(r'login', user_views.login, name='vod-login'),
@@ -27,4 +28,9 @@ urlpatterns = [
     url(r'^datatype/create/$', DataTypeCreateView.as_view(), name='datatype-create'),
     url(r'^datatype/update/(?P<id>\d+)/$', DataTypeUpdateView.as_view(), name='datatype-update'),
     url(r'^datatype/delete/(?P<id>\d+)/$', DataTypeRetireView.as_view(), name='datatype-retire'),
+
+    url(r'^transplant/list/$', TransplantListView.as_view(), name='transplant-list'),
+    url(r'^transplant/create/$', TransplantCreateView.as_view(), name='transplant-create'),
+    url(r'^transplant/update/(?P<id>\d+)/$', TransplantUpdateView.as_view(), name='transplant-update'),
+    url(r'^transplant/delete/(?P<id>\d+)/$', TransplantRetireView.as_view(), name='transplant-retire'),
 ]
