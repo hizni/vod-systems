@@ -47,7 +47,7 @@ class DataTypeUpdateView(UpdateView):
     selected_pk = 0
 
     def get_form(self, form_class=None):
-        form = super(DatatypeCreateUpdateForm, self).get_form(form_class)
+        form = super(DataTypeUpdateView, self).get_form(form_class)
         form.helper.form_action = reverse('datatype-update', kwargs={'id': self.selected_pk})
         return form
 
@@ -71,7 +71,7 @@ class DataTypeRetireView(UpdateView):
     selected_pk = 0
 
     def get_form(self, form_class=None):
-        form = super(DatatypeRetireForm, self).get_form(form_class)
+        form = super(DataTypeRetireView, self).get_form(form_class)
         form.helper.form_action = reverse('datatype-retire', kwargs={'id': self.selected_pk})
         return form
 

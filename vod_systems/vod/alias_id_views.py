@@ -28,7 +28,7 @@ class AliasIdListView(ListView):
 class AliasIdCreateView(CreateView):
     form_class = parsleyfy(AliasIdCreateUpdateForm)
     template_name = './vod/admin/generic-modal.html'
-    view_title = 'Create new alias identifier'
+    view_title = 'Create new Alias Identifier'
 
     def form_valid(self, form):
         form.save()
@@ -43,7 +43,7 @@ class AliasIdUpdateView(UpdateView):
     form_class = parsleyfy(AliasIdCreateUpdateForm)
     model = AliasIdentifier
     template_name = './vod/admin/generic-modal.html'
-    view_title = 'Update existing institution'
+    view_title = 'Update existing Alias Identifier'
     selected_pk = 0
 
     def get_form(self, form_class=None):
@@ -67,7 +67,7 @@ class AliasIdRetireView(UpdateView):
     form_class = parsleyfy(AliasIdRetireForm)
     model = AliasIdentifier
     template_name = './vod/admin/generic-modal.html'
-    view_title = 'Institution active status'
+    view_title = 'Alias Identifier active status'
     selected_pk = 0
 
     def get_form(self, form_class=None):

@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect
 
-from models import Transplant
+from models import TransplantType
 from django.core.urlresolvers import reverse
 
 from transplant_forms import TransplantCreateUpdateForm, TransplantRetireForm
@@ -18,11 +18,11 @@ DataType model Class Based Views
 
 
 class TransplantListView(ListView):
-    model = Transplant
+    model = TransplantType
     template_name = './vod/admin/transplant-list.html'
 
     def get_queryset(self):
-        return Transplant.objects.all()
+        return TransplantType.objects.all()
 
 
 class TransplantCreateView(CreateView):
@@ -41,19 +41,19 @@ class TransplantCreateView(CreateView):
 class TransplantUpdateView(UpdateView):
 
     form_class = parsleyfy(TransplantCreateUpdateForm)
-    model = Transplant
+    model = TransplantType
     template_name = './vod/admin/generic-modal.html'
     view_title = 'Update existing transplant'
     selected_pk = 0
 
     def get_form(self, form_class=None):
-        form = super(TransplantCreateUpdateForm, self).get_form(form_class)
+        form = super(TransplantUpdateView, self).get_form(form_class)
         form.helper.form_action = reverse('transplant-update', kwargs={'id': self.selected_pk})
         return form
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return Transplant.objects.get(id=self.kwargs['id'])
+        return TransplantType.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()
@@ -65,19 +65,19 @@ class TransplantUpdateView(UpdateView):
 
 class TransplantRetireView(UpdateView):
     form_class = parsleyfy(TransplantRetireForm)
-    model = Transplant
+    model = TransplantType
     template_name = './vod/admin/generic-modal.html'
     view_title = 'Transplant active status'
     selected_pk = 0
 
     def get_form(self, form_class=None):
-        form = super(TransplantRetireForm, self).get_form(form_class)
+        form = super(TransplantRetireView, self).get_form(form_class)
         form.helper.form_action = reverse('transplant-retire', kwargs={'id': self.selected_pk})
         return form
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return Transplant.objects.get(id=self.kwargs['id'])
+        return TransplantType.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()
