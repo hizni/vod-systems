@@ -27,7 +27,7 @@ class TransplantListView(ListView):
 
 class TransplantCreateView(CreateView):
     form_class = parsleyfy(TransplantCreateUpdateForm)
-    template_name = './vod/admin/generic-modal.html'
+    template_name = '../templates/common/generic-modal.html'
     view_title = 'Create new transplant'
 
     def form_valid(self, form):
@@ -42,7 +42,7 @@ class TransplantUpdateView(UpdateView):
 
     form_class = parsleyfy(TransplantCreateUpdateForm)
     model = TransplantType
-    template_name = './vod/admin/generic-modal.html'
+    template_name = '../templates/common/generic-modal.html'
     view_title = 'Update existing transplant'
     selected_pk = 0
 
@@ -66,7 +66,7 @@ class TransplantUpdateView(UpdateView):
 class TransplantRetireView(UpdateView):
     form_class = parsleyfy(TransplantRetireForm)
     model = TransplantType
-    template_name = './vod/admin/generic-modal.html'
+    template_name = '../templates/common/generic-modal.html'
     view_title = 'Transplant active status'
     selected_pk = 0
 

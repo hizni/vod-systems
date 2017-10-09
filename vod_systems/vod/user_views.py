@@ -54,7 +54,7 @@ class UserListView(ListView):
 
 class UserCreateView(CreateView):
     form_class = parsleyfy(UserCreateForm)
-    template_name = './vod/admin/generic-modal.html'
+    template_name = '../templates/common/generic-modal.html'
     view_title = 'Create new user'
 
     def form_valid(self, form):
@@ -75,7 +75,7 @@ class UserUpdateView(UpdateView):
 
     form_class = parsleyfy(UserUpdateForm)
     model = User
-    template_name = './vod/admin/generic-modal.html'
+    template_name = '../templates/common/generic-modal.html'
     view_title = 'Update existing user'
     selected_pk = 0
 
@@ -99,7 +99,7 @@ class UserUpdateView(UpdateView):
 class UserRetireView(UpdateView):
     form_class = parsleyfy(UserRetireForm)
     model = User
-    template_name = './vod/admin/generic-modal.html'
+    template_name = '../templates/common/generic-modal.html'
     view_title = 'User active status'
     selected_pk = 0
 
