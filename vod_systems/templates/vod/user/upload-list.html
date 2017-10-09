@@ -1,0 +1,127 @@
+{% extends './vod/vod-base.html' %}
+{% block sidebar %}
+
+    {% include './vod/admin/../sidebar.html' %}
+{% endblock %}
+{% block main-content %}
+<div class="panel panel-default">
+    <div class="panel-heading">Upload Data File </div>
+    <div class="panel-body">
+         <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+             <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Select data file&hellip; <input type="file" name="myfile" style="display: none;">
+                    </span>
+                </label>
+                <input class="form-control" readonly>
+            </div>
+             <div class="pull-right">
+                 <button id="btnGoUpload" class="btn btn-success" type="submit">Upload Data</button>
+             </div>
+        </form>
+    </div>
+
+
+
+</div>
+<div class="panel panel-default">
+
+    <div class="panel-heading">Upload History
+
+    </div>
+    <div class="panel-body">
+
+            <!-- main window content will be displayed here -->
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Upload Date</th>
+                    <th>Outcome</th>
+                    <th>Uploaded By</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for i in object_list %}
+                    <tr>
+                        <td>{{ i.filename }}</td>
+                        <td>{{ i.upload_date }}</td>
+                        <td>{{ i.outcome }}</td>
+                        <td>{{ i.uploaded_by }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="modal fade" id="modal"></div>
+    </div>
+</div>
+
+<script>
+
+var table;
+$(document).ready(function() {
+    $('#btnGoUpload').attr('disabled', true);
+    table = $('#example').DataTable({
+        "bFilter": false  // switch of search functionality
+    });
+} );
+
+//script that handles the viewing of the modal CBVs
+$('#modal').on('show.bs.modal', function (event) {
+
+    var modal = $(this)
+    $.ajax({
+        url: $(event.relatedTarget).attr('href'),
+        context: document.body
+    }).done(function(response) {
+        modal.html(response);
+        $(this).removeData('bs.modal');
+    });
+});
+
+// We can attach the `fileselect` event to all file inputs on the page
+$(document).on('change', ':file', function() {
+var input = $(this),
+    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+    input.trigger('fileselect', [numFiles, label]);
+});
+
+// We can watch for our custom fileselect event like this
+$(document).ready( function() {
+  $(':file').on('fileselect', function(event, numFiles, label) {
+
+      var input = $(this).parents('.input-group').find(':text'),
+          log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+      if (numFiles == 0){
+          $('#btnGoUpload').attr('disabled', true);
+          input.val(log);
+      }
+      else {
+          if( input.length ) {
+            input.val(log);
+            $('#btnGoUpload').attr('disabled', false);
+          } else {
+          $('#btnGoUpload').attr('disabled', true);
+            if( log ) {
+                alert(log);
+                input.val(log);
+            }
+          }
+      }
+
+
+  });
+});
+
+function upload() {
+    alert(" upload function fired -- ");
+
+}
+</script>
+{% endblock %}

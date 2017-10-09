@@ -36,6 +36,7 @@ class TransplantType(models.Model):
 
 # primary data
 
+
 class Patient(models.Model):
     surname = models.CharField(max_length=255)
     firstname = models.CharField(max_length=255)
@@ -59,6 +60,13 @@ class Transplant(models.Model):
     day_zero = models.DateField()
     start_weight = models.FloatField()
     start_renal_function = models.FloatField()
+
+
+class UploadHistory(models.Model):
+    filename = models.CharField(max_length=255)
+    outcome = models.CharField(max_length=255)
+    upload_date = models.DateTimeField()
+    uploaded_by = models.CharField(max_length=255)
 
 
 

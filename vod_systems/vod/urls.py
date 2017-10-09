@@ -5,6 +5,10 @@ from vod.institution_views import InstitutionListView, InstitutionCreateView, In
 from vod.alias_id_views import AliasIdListView, AliasIdCreateView, AliasIdUpdateView, AliasIdRetireView
 from vod.datatype_views import DataTypeListView, DataTypeCreateView, DataTypeUpdateView, DataTypeRetireView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
+from vod.upload_views import UploadListView
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'login', user_views.login, name='vod-login'),
@@ -36,5 +40,8 @@ urlpatterns = [
     url(r'^transplant/delete/(?P<id>\d+)/$', TransplantRetireView.as_view(), name='transplant-retire'),
 
     # url routes for staff (normal user) related views
-    # url(r'^patient/list/$', PatientListView.as_view(), name='patient-list'),
+    url(r'^upload/list/$', UploadListView.as_view(), name='upload-list'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
