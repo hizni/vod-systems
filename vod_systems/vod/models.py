@@ -30,7 +30,7 @@ class DataType(models.Model):
 
 
 class TransplantType(models.Model):
-    code = models.CharField(max_length=20) # transplant type
+    code = models.CharField(max_length=20)  # transplant type
     description = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
 
@@ -57,7 +57,7 @@ class Transplant(models.Model):
     fk_patient_id = models.ForeignKey(Patient)
     number = models.IntegerField()
     fk_transplant_type = models.ForeignKey(TransplantType)
-    day_zero = models.DateField()
+    day_zero = models.DateTimeField()
     start_weight = models.FloatField()
     start_renal_function = models.FloatField()
 
