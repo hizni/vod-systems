@@ -2,10 +2,10 @@ from django.db import models
 
 
 GENDER_CHOICES = (
-    ('Male', 'M'),
-    ('Female', 'F'),
-    ('Indeterminate', 'I'),
-    ('Unknown', 'U'),
+    ('M','Male'),
+    ('F','Female'),
+    ('I', 'Indeterminate'),
+    ('U', 'Unknown'),
 )
 
 # metadata - models hold meta data that is used to describe data held in primary tables
@@ -43,6 +43,7 @@ class Patient(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     date_of_birth = models.DateTimeField()
     date_of_death = models.DateTimeField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
 
 class PatientIdentifier(models.Model):
