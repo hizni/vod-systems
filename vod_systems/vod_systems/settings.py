@@ -40,7 +40,8 @@ INSTALLED_APPS = (
 
     'vod',
     'crispy_forms',
-    'parsley'
+    'parsley',
+    'bootstrap3_datetime'
 
 )
 
@@ -104,7 +105,7 @@ USE_TZ = True
 # Uploaded CSV files - could be stored on server.
 # Held for auditing purposes and housecleaned occasionally to not fill up disk with them
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data_uploaded')
-MEDIA_URL = '/data_uploaded/'
+MEDIA_URL = '/data/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
