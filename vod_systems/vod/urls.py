@@ -1,14 +1,16 @@
+from django.conf import settings
 from django.conf.urls import url
+from django.conf.urls.static import static
+
 from vod import user_views
-from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView
-from vod.institution_views import InstitutionListView, InstitutionCreateView, InstitutionUpdateView, InstitutionRetireView
 from vod.alias_id_views import AliasIdListView, AliasIdCreateView, AliasIdUpdateView, AliasIdRetireView
 from vod.datatype_views import DataTypeListView, DataTypeCreateView, DataTypeUpdateView, DataTypeRetireView
+from vod.institution_views import InstitutionListView, InstitutionCreateView, InstitutionUpdateView, \
+    InstitutionRetireView
+from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateView, PatientRetireView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.upload_views import UploadListView
-
-from django.conf import settings
-from django.conf.urls.static import static
+from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView
 
 urlpatterns = [
     url(r'login', user_views.login, name='vod-login'),
@@ -41,6 +43,11 @@ urlpatterns = [
 
     # url routes for staff (normal user) related views
     url(r'^upload/list/$', UploadListView.as_view(), name='upload-list'),
+
+    url(r'^patient/list/$', PatientListView.as_view(), name='patient-list'),
+    url(r'^patient/create/$', PatientCreateView.as_view(), name='patient-create'),
+    url(r'^patient/update/(?P<id>\d+)/$', PatientUpdateView.as_view(), name='patient-update'),
+    url(r'^patient/delete/(?P<id>\d+)/$', PatientRetireView.as_view(), name='patient-retire'),
 ]
 
 if settings.DEBUG:
