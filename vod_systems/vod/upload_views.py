@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
-from models import UploadHistory, Transplant
+from models import Upload_History, Transplant
 from django.core.files.storage import FileSystemStorage
 import datetime
 import csv
@@ -9,18 +9,18 @@ from django.core.urlresolvers import reverse
 
 
 class UploadListView(ListView):
-    model = UploadHistory
+    model = Upload_History
     template_name = './vod/user/upload-list.html'
 
     def get_queryset(self):
-        return UploadHistory.objects.all()
+        return Upload_History.objects.all()
 
     def post(self, request):
         if request.method == 'POST' and request.FILES['myfile']:
             myfile = request.FILES['myfile']
 
             # create file upload audit
-            uploaded_file = UploadHistory(filename=myfile.name, uploaded_by=request.user, upload_date=datetime.datetime.now())
+            uploaded_file = Upload_History(filename=myfile.name, uploaded_by=request.user, upload_date=datetime.datetime.now())
 
             if self.validate_file_extension(myfile.name, 'csv'):
                 # saving file to server filesystem - do we need to do this??

@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect
 
-from models import AliasIdentifier
+from models import Alias_Identifier
 from django.core.urlresolvers import reverse
 
 from alias_id_forms import AliasIdCreateUpdateForm, AliasIdRetireForm
@@ -18,11 +18,11 @@ Alias Identifier model Class Based Views
 
 
 class AliasIdListView(ListView):
-    model = AliasIdentifier
+    model = Alias_Identifier
     template_name = './vod/admin/alias-id-list.html'
 
     def get_queryset(self):
-        return AliasIdentifier.objects.all()
+        return Alias_Identifier.objects.all()
 
 
 class AliasIdCreateView(CreateView):
@@ -41,7 +41,7 @@ class AliasIdCreateView(CreateView):
 class AliasIdUpdateView(UpdateView):
 
     form_class = parsleyfy(AliasIdCreateUpdateForm)
-    model = AliasIdentifier
+    model = Alias_Identifier
     template_name = '../templates/common/generic-modal.html'
     view_title = 'Update existing Alias Identifier'
     selected_pk = 0
@@ -53,7 +53,7 @@ class AliasIdUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return AliasIdentifier.objects.get(id=self.kwargs['id'])
+        return Alias_Identifier.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()
@@ -65,7 +65,7 @@ class AliasIdUpdateView(UpdateView):
 
 class AliasIdRetireView(UpdateView):
     form_class = parsleyfy(AliasIdRetireForm)
-    model = AliasIdentifier
+    model = Alias_Identifier
     template_name = '../templates/common/generic-modal.html'
     view_title = 'Alias Identifier active status'
     selected_pk = 0
@@ -77,7 +77,7 @@ class AliasIdRetireView(UpdateView):
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return AliasIdentifier.objects.get(id=self.kwargs['id'])
+        return Alias_Identifier.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()

@@ -7,12 +7,12 @@ from patient_forms import PatientCreateUpdateForm, PatientRetireForm
 from parsley.decorators import parsleyfy
 
 """
-DataType model Class Based Views
-    DataTypeListView    - list all the data types
+Patient model Class Based Views
+    PatientListView    - list all the data types
 
-    DataTypeCreateView  - create a new data type
-    DataTypeUpdateView  - update a selected data type
-    DataTypeRetireView  - activate/deactivate the selected data type
+    PatientCreateView  - create a new data type
+    PatientUpdateView  - update a selected data type
+    PatientRetireView  - activate/deactivate the selected data type
 """
 
 

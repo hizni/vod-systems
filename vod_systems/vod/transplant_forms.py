@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from models import TransplantType
+from models import Transplant_Type
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
 from crispy_forms.bootstrap import FormActions
@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 class TransplantCreateUpdateForm(ModelForm):
 
     class Meta:
-        model = TransplantType
+        model = Transplant_Type
         fields = ['code', 'description']
 
     def __init__(self, *args, **kwargs):
@@ -54,7 +54,7 @@ class TransplantCreateUpdateForm(ModelForm):
 class TransplantRetireForm(ModelForm):
 
     class Meta:
-        model = TransplantType
+        model = Transplant_Type
         fields = ['is_active']
 
     def __init__(self, *args, **kwargs):

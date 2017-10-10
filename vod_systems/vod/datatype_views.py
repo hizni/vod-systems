@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect
 
-from models import DataType
+from models import Datatype
 from django.core.urlresolvers import reverse
 
 from datatype_forms import DatatypeCreateUpdateForm, DatatypeRetireForm
@@ -18,11 +18,11 @@ DataType model Class Based Views
 
 
 class DataTypeListView(ListView):
-    model = DataType
+    model = Datatype
     template_name = './vod/admin/datatype-list.html'
 
     def get_queryset(self):
-        return DataType.objects.all()
+        return Datatype.objects.all()
 
 
 class DataTypeCreateView(CreateView):
@@ -41,7 +41,7 @@ class DataTypeCreateView(CreateView):
 class DataTypeUpdateView(UpdateView):
 
     form_class = parsleyfy(DatatypeCreateUpdateForm)
-    model = DataType
+    model = Datatype
     template_name = '../templates/common/generic-modal.html'
     view_title = 'Update existing data type'
     selected_pk = 0
@@ -53,7 +53,7 @@ class DataTypeUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return DataType.objects.get(id=self.kwargs['id'])
+        return Datatype.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()
@@ -65,7 +65,7 @@ class DataTypeUpdateView(UpdateView):
 
 class DataTypeRetireView(UpdateView):
     form_class = parsleyfy(DatatypeRetireForm)
-    model = DataType
+    model = Datatype
     template_name = '../templates/common/generic-modal.html'
     view_title = 'Data type active status'
     selected_pk = 0
@@ -77,7 +77,7 @@ class DataTypeRetireView(UpdateView):
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return DataType.objects.get(id=self.kwargs['id'])
+        return Datatype.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()
