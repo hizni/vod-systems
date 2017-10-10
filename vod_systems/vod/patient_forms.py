@@ -5,15 +5,23 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
 from crispy_forms.bootstrap import FormActions
 from django.core.urlresolvers import reverse
+from bootstrap3_datetime.widgets import DateTimePicker
 
 
 class PatientCreateUpdateForm(ModelForm):
 
-    date_of_birth = forms.DateTimeField(widget=forms.DateTimeInput)
+    date_of_birth = forms.DateTimeField(required = False,
+                                        widget = DateTimePicker(options={"format": "YYYY-MM-DD",
+                                                                          "pickTime": False
+                                                                         }))
 
+    date_of_death = forms.DateTimeField(required=False,
+                                        widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
+                                                                       "pickSeconds": False
+                                                                       }))
     class Meta:
         model = Patient
-        fields = ['surname', 'firstname', 'gender', 'date_of_birth', 'date_of_death']
+        fields = ['surname', "first_name", 'gender', 'date_of_birth', 'date_of_death']
 
     def __init__(self, *args, **kwargs):
         super(PatientCreateUpdateForm, self).__init__(*args, **kwargs)
@@ -40,8 +48,8 @@ class PatientCreateUpdateForm(ModelForm):
                   data_parsley_length="[0,255]",
                   data_parsley_trigger='change'
                   ),
-            Field('firstname',
-                  id='firstname',
+            Field('first_name',
+                  id='first_name',
                   data_parsley_length="[0,255]",
                   data_parsley_trigger='change'
                   ),
