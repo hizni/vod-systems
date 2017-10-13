@@ -1,9 +1,10 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, CheckboxSelectMultiple
 from django import forms
 from django.contrib.auth.models import User
+from models import Institution
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
-from crispy_forms.bootstrap import FormActions
+from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
 
 
@@ -15,11 +16,19 @@ class UserCreateForm(ModelForm):
     # but the error text message does seem to get set here..... html5 error message?
     username = forms.CharField(help_text='')
     password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Password Check', help_text='Re-enter the password..')
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Password Check', help_text='Re-enter the '
+                                                                                                     'password..')
+
+    CHOICES = Institution.objects.all()
+    checkboxselectmultiple = forms.MultipleChoiceField(choices=((x.code, x.description) for x in CHOICES),
+                                                       widget=forms.CheckboxSelectMultiple,
+                                                       label='Select the institution(s) this user has permission to'
+                                                             ' view data for: ')
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'username', 'password', 'confirm_password', 'is_staff', 'is_superuser']
+        fields = ['first_name', 'last_name', 'email', 'username',
+                  'password', 'confirm_password', 'is_staff', 'is_superuser']
 
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
@@ -41,43 +50,57 @@ class UserCreateForm(ModelForm):
             # See parsleyjs documentation: http://parsleyjs.org/doc/
             #   data_parsley_length="[minimum-value,maximum-value]"
 
-            Field('first_name',
-                  id='first_name',
-                  data_parsley_length="[5,10]",
-                  data_parsley_trigger='change'
-                  ),
-            Field('last_name',
-                  id='last_name'
-                  ),
-            Field('email',
-                  id='email',
-                  data_parsley_trigger='change'
-                  ),
-            Field('username',
-                  id='username',
-                  required=True,
-                  autocomplete='off'
-                  ),
-            Field('password',
-                  id='password',
-                  required=True
-                  ),
-            Field('confirm_password',
-                  id="confirm_password",
-                  required=True,
-                  label="Password check:",
-                  data_parsley_equalto="#password",
-                  data_parsley_trigger='change',
+            TabHolder(
+                Tab('User Details',
+                    Field('first_name',
+                          id='first_name',
+                          data_parsley_length="[5,10]",
+                          data_parsley_trigger='change'
+                          ),
+                    Field('last_name',
+                          id='last_name'
+                          ),
+                    Field('email',
+                          id='email',
+                          data_parsley_trigger='change'
+                          ),
+                    Field('username',
+                          id='username',
+                          required=True,
+                          autocomplete='off'
+                          ),
+                    Field('password',
+                          id='password',
+                          required=True
+                          ),
+                    Field('confirm_password',
+                          id="confirm_password",
+                          required=True,
+                          label="Password check:",
+                          data_parsley_equalto="#password",
+                          data_parsley_trigger='change',
 
-                  error_message="The passwords do not match."),
-
-            Field('is_staff',
-                  id='is_staff'
-                  ),
-            Field('is_superuser',
-                  id='is_superuser'
-                  ),
-
+                          error_message="The passwords do not match."),
+                ),
+                Tab('Roles',
+                    Field('is_staff',
+                          id='is_staff',
+                          name='role[]',
+                          data_parsley_mincheck="1"
+                          ),
+                    Field('is_superuser',
+                          id='is_superuser',
+                          name='role[]'
+                          ),
+                ),
+                Tab(
+                    'Institutions',
+                    Field('checkboxselectmultiple',
+                          id='user_insts',
+                          required=True,
+                          error_message="At least one Institution must be chosen"),
+                ),
+            ),
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
@@ -160,8 +183,8 @@ class UserUpdateForm(ModelForm):
 
             Field('first_name',
                   id='first_name',
-                  data_parsley_length="[5,10]",
-                  data_parsley_trigger='change'
+                  #data_parsley_length="[5,10]",
+                  #data_parsley_trigger='change'
                   ),
             Field('last_name',
                   id='last_name'

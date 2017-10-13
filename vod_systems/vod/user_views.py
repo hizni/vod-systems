@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 
 from user_forms import UserCreateForm, UserUpdateForm, UserRetireForm
+from models import User_Institution, Institution
 from parsley.decorators import parsleyfy
 
 
@@ -63,10 +64,25 @@ class UserCreateView(CreateView):
         user.set_password(user.password)
         user.save()
 
-        if (user.is_superuser):
+
+
+        user_inst_list = []
+        # todo - make this selectable to allow user to select one to many institutions
+        # hardcoded to set the newly added user to ONLY use the OUH institution
+        for i in form.cleaned_data['checkboxselectmultiple']:
+            user_inst = User_Institution()
+            user_inst.fk_user_id = user
+            user_inst.fk_institution_id = Institution.objects.get(code=i)
+
+            # user_inst_list.append(user_inst)
+            user_inst.save()
+
+
+        if user.is_superuser:
             return redirect('user-list')
         else:
             return redirect('user-list')
+
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form,))
 

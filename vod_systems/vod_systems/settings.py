@@ -41,8 +41,7 @@ INSTALLED_APPS = (
     'vod',
     'crispy_forms',
     'parsley',
-    'bootstrap3_datetime'
-
+    'bootstrap3_datetime',
 )
 
 MIDDLEWARE_CLASSES = (
