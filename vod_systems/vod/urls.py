@@ -7,7 +7,7 @@ from vod.alias_id_views import AliasIdListView, AliasIdCreateView, AliasIdUpdate
 from vod.datatype_views import DataTypeListView, DataTypeCreateView, DataTypeUpdateView, DataTypeRetireView
 from vod.institution_views import InstitutionListView, InstitutionCreateView, InstitutionUpdateView, \
     InstitutionRetireView
-from vod.user_institution_views import UserInstitutionListView
+
 from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateView, PatientRetireView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.upload_views import UploadListView
@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^institution/update/(?P<id>\d+)/$', InstitutionUpdateView.as_view(), name='institution-update'),
     url(r'^institution/delete/(?P<id>\d+)/$', InstitutionRetireView.as_view(), name='institution-retire'),
 
-    url(r'^user-institution/list/$', UserInstitutionListView.as_view(), name='user-institution-list'),
 
     url(r'^aliasid/list/$', AliasIdListView.as_view(), name='alias-id-list'),
     url(r'^aliasid/create/$', AliasIdCreateView.as_view(), name='alias-id-create'),
