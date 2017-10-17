@@ -8,13 +8,17 @@ from vod.datatype_views import DataTypeListView, DataTypeCreateView, DataTypeUpd
 from vod.institution_views import InstitutionListView, InstitutionCreateView, InstitutionUpdateView, \
     InstitutionRetireView
 
-from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateView, PatientRetireView
+from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateView, PatientRetireView, \
+    PatientDetailView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.upload_views import UploadListView
 from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView
 
+from vod_systems import views
+
 urlpatterns = [
     url(r'login', user_views.login, name='vod-login'),
+    url(r'logout', views.landing, name='vod-logout'),
 
     # url routes for superuser (admin) related views
     url(r'^user/list/$', UserListView.as_view(), name='user-list'),
@@ -50,6 +54,7 @@ urlpatterns = [
     url(r'^patient/create/$', PatientCreateView.as_view(), name='patient-create'),
     url(r'^patient/update/(?P<id>\d+)/$', PatientUpdateView.as_view(), name='patient-update'),
     url(r'^patient/delete/(?P<id>\d+)/$', PatientRetireView.as_view(), name='patient-retire'),
+    url(r'^patient/(?P<id>\d+)/$', PatientDetailView.as_view(), name='patient-detail'),
 ]
 
 if settings.DEBUG:

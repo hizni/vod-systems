@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 
-from user_forms import UserCreateForm, UserUpdateForm, UserRetireForm
+from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm
 from models import User_Institution, Institution
 from parsley.decorators import parsleyfy
 
@@ -64,19 +64,12 @@ class UserCreateView(CreateView):
         user.set_password(user.password)
         user.save()
 
-
-
-        user_inst_list = []
-        # todo - make this selectable to allow user to select one to many institutions
-        # hardcoded to set the newly added user to ONLY use the OUH institution
         for i in form.cleaned_data['checkboxselectmultiple']:
             user_inst = User_Institution()
             user_inst.fk_user_id = user
             user_inst.fk_institution_id = Institution.objects.get(code=i)
 
-            # user_inst_list.append(user_inst)
             user_inst.save()
-
 
         if user.is_superuser:
             return redirect('user-list')
@@ -89,7 +82,7 @@ class UserCreateView(CreateView):
 
 class UserUpdateView(UpdateView):
 
-    form_class = parsleyfy(UserUpdateForm)
+    form_class = parsleyfy(UserDetailUpdateForm)
     model = User
     template_name = '../templates/common/generic-modal.html'
     view_title = 'Update existing user'
@@ -105,7 +98,22 @@ class UserUpdateView(UpdateView):
         return User.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
-        form.save()
+        user = form.save()
+
+        # todo Add some auditing to user institution management
+        # currently all previous entries for institutions attributed to this user are deleted
+        # no audit trail is setup
+        user_chosen_inst = User_Institution.objects.filter(fk_user_id=self.kwargs['id'])
+        user_chosen_inst.delete()
+
+        # adding user - institution relationship
+        for i in form.cleaned_data['checkboxselectmultiple']:
+            user_inst = User_Institution()
+            user_inst.fk_user_id = user
+            user_inst.fk_institution_id = Institution.objects.get(id=i)
+
+            user_inst.save()
+
         return redirect('user-list')
 
     def form_invalid(self, form):
@@ -134,4 +142,5 @@ class UserRetireView(UpdateView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form, ))
+
 

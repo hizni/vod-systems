@@ -50,12 +50,12 @@ class Patient(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     date_of_birth = models.DateTimeField()
     date_of_death = models.DateTimeField(blank=True, null=True)
+    fk_institution_id = models.ForeignKey(Institution)
     is_active = models.BooleanField(default=True)
 
 
 class Patient_Identifier(models.Model):
     fk_patient_id = models.ForeignKey(Patient)
-    fk_institution_id = models.ForeignKey(Institution)
     department_id = models.CharField(max_length=100)
     fk_identifier_type = models.ForeignKey(Alias_Identifier)
     pt_identifier_type_value = models.CharField(max_length=50)

@@ -9,10 +9,10 @@
         <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
             <li><a>Hello {{ user.username }}</a></li>
-            <li><a>Logout</a></li>
-            {% else %}
+            <li><a href="{% url 'index' %}">Logout</a></li>
+        {% else %}
             <li><a>Login</a></li>
-            {% endif %}
+        {% endif %}
         </ul>
     </div>
 </nav>

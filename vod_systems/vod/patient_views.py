@@ -1,6 +1,6 @@
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.shortcuts import render, redirect
-from models import Patient
+from models import Patient, Datatype, Patient_Identifier ,User_Institution
 from django.core.urlresolvers import reverse
 
 from patient_forms import PatientCreateUpdateForm, PatientRetireForm
@@ -21,7 +21,19 @@ class PatientListView(ListView):
     template_name = './vod/user/patient-list.html'
 
     def get_queryset(self):
-        return Patient.objects.all()
+        user_insts = User_Institution.objects.values_list('fk_institution_id', flat=True).filter(fk_user_id=self.request.user.id)
+        patients = Patient.objects.all().filter(fk_institution_id=user_insts)
+        return patients
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientListView, self).get_context_data(**kwargs)
+        context['user_institutions_list'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id)
+        return context
+
+
+class PatientDetailView(DetailView):
+    model = Patient
+    template_name = './vod/user/patient-detail.html'
 
 
 class PatientCreateView(CreateView):
@@ -52,7 +64,7 @@ class PatientUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return DataType.objects.get(id=self.kwargs['id'])
+        return Patient.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()
@@ -76,7 +88,7 @@ class PatientRetireView(UpdateView):
 
     def get_object(self, queryset=None):
         self.selected_pk = self.kwargs['id']
-        return DataType.objects.get(id=self.kwargs['id'])
+        return Patient.objects.get(id=self.kwargs['id'])
 
     def form_valid(self, form):
         form.save()

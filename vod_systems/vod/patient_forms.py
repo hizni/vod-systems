@@ -1,9 +1,9 @@
 from django.forms import ModelForm
 from django import forms
-from models import Patient
+from models import Patient, User_Institution
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
-from crispy_forms.bootstrap import FormActions
+from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
 from bootstrap3_datetime.widgets import DateTimePicker
 
@@ -19,13 +19,16 @@ class PatientCreateUpdateForm(ModelForm):
                                         widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
                                                                        "pickSeconds": False
                                                                        }))
+    # institutions = forms.ModelChoiceField(required=True, queryset=User_Institution.objects.all())
+
     class Meta:
         model = Patient
-        fields = ['surname', "first_name", 'gender', 'date_of_birth', 'date_of_death']
+        fields = ['surname', "first_name", 'gender', 'date_of_birth', 'date_of_death', 'fk_institution_id']
 
     def __init__(self, *args, **kwargs):
         super(PatientCreateUpdateForm, self).__init__(*args, **kwargs)
 
+        # self.fields['institutions'].choices = ((x.code, x.description) for x in User_Institution.objects.all().filter(fk_user_id=self.instance.id))
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
@@ -42,28 +45,35 @@ class PatientCreateUpdateForm(ModelForm):
             # Other validation criteria then get applied if data is filled in.
             # See parsleyjs documentation: http://parsleyjs.org/doc/
             #   data_parsley_length="[minimum-value,maximum-value]"
-
-            Field('surname',
-                  id='surname',
-                  data_parsley_length="[0,255]",
-                  data_parsley_trigger='change'
-                  ),
-            Field('first_name',
-                  id='first_name',
-                  data_parsley_length="[0,255]",
-                  data_parsley_trigger='change'
-                  ),
-            Field('gender',
-                  id='gender',
-                  data_parsley_length="[0,10]",
-                  data_parsley_trigger='change'
-                  ),
-            Field('date_of_birth',
-                  id='date_of_birth'
-                  ),
-            Field('date_of_death',
-                  id='date_of_death'
-                  ),
+            TabHolder(
+                Tab(
+                    'Patient Details',
+                    Field('surname',
+                          id='surname',
+                          data_parsley_length="[0,255]",
+                          data_parsley_trigger='change'),
+                    Field('first_name',
+                          id='first_name',
+                          data_parsley_length="[0,255]",
+                          data_parsley_trigger='change'
+                          ),
+                    Field('gender',
+                          id='gender',
+                          data_parsley_length="[0,10]",
+                          data_parsley_trigger='change'
+                          ),
+                    Field('date_of_birth',
+                          id='date_of_birth'
+                          ),
+                    Field('date_of_death',
+                          id='date_of_death'
+                          ),
+                ),
+                Tab(
+                    'Institution Details',
+                    Field('fk_institution_id', id='fk_institution_id'),
+                )
+            ),
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),

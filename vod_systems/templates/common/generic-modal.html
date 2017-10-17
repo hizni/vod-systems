@@ -12,6 +12,15 @@
 
             {% crispy form %}
         </div>
+        <!--
+        <div class="modal-footer" id="submit-div">
+            <span class="pull-right">
+                <button id="btnClose" class="btn btn-default">Close</button>
+                <input type='submit' id='btnFoo' class="btn btn-success" />
+            </span>
+        </div>
+        -->
+
     </div>
 </div><!-- /.modal-dialog -->
 
@@ -44,5 +53,17 @@
           form.parsley().validate();
       });
     });
+
+    // experimented with adding footer buttons to table. Not using DataTables form submit buttons
+/*
+    $('#btnFoo').click(function() {
+        alert('submitting form!');
+         $('#form').submit();
+    });
+
+    $('#btnClose').click(function() {
+        $('#modal').modal('hide');
+    });
+*/
 </script>
 

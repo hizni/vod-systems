@@ -3,38 +3,52 @@
     {% include './vod/admin/../sidebar.html' %}
 {% endblock %}
 {% block main-content %}
-<div class="panel panel-default">
+<div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
     <div class="panel-heading">Patients
-        <div class="pull-right">
-            <a id="btnAdd" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatient" data-toggle="modal" data-target="#modal" href="{% url 'patient-create' %}">
-                <span class="glyphicon glyphicon-buildings" > </span>
-                New Patient
-            </a>
-        </div>
+            <div class="pull-right">
+                <a id="btnAdd" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatient" data-toggle="modal" data-target="#modal" href="{% url 'patient-create' %}">
+                    <span class="glyphicon glyphicon-buildings"> </span>
+                    New Patient
+                </a>
+            </div>
+            <br>
+            Show me patients belonging to
+            <!-- todo add an ALL function to show all patients that a user can see on all INSTITUTIONS they have permission to -->
+            <select id ="selectInst" name="selectInst">
+                {% for i in user_institutions_list %}
+                    <option value="{{ i.fk_institution_id.id }}">{{ i.fk_institution_id.description }}</option>
+                {% endfor %}
+            </select>
+
     </div>
     <div class="panel-body">
-            <!-- main window content will be displayed here -->
+        <!-- main window content will be displayed here -->
+
             <table id="example" class="display" cellspacing="0" width="100%">
                 <thead>
                 <tr>
+                    <td hidden="true">Id</td>
                     <th>Surname</th>
                     <th>Forename</th>
                     <th>Gender</th>
                     <th>Date of birth</th>
                     <th>Date of death</th>
                     <th>Is active</th>
+                    <th hidden="true">Institution id</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for i in object_list %}
                     <tr>
+                        <td hidden="true">{{ i.id }}</td>
                         <td>{{ i.surname }}</td>
-                        <td>{{ i.forename }}</td>
+                        <td>{{ i.first_name }}</td>
                         <td>{{ i.gender }}</td>
                         <td>{{ i.date_of_birth }}</td>
                         <td>{{ i.date_of_death }}</td>
                         <td>{{ i.is_active }}</td>
+                        <td hidden="true">{{ i.fk_institution_id_id }}</td>
                         <td>
                             <a data-id="{{ i.id }}" class="btn btn-info btn-xs" href="{% url 'patient-update' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-pencil"></span></a>
                             <a data-id="{{ i.id }}" class="btn btn-danger btn-xs" href="{% url 'patient-retire' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-trash"></span></a>
@@ -50,13 +64,49 @@
 
 <script>
 
+
 var table;
 $(document).ready(function() {
+    //initialising DataTables control
     table = $('#example').DataTable({
-        "bFilter": false  // switch of search functionality
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
     });
 
+
+
+    /*
+    $("#example tfoot th").each( function ( i ) {
+        var select = $('<select><option value=""></option></select>')
+            .appendTo( $(this).empty() )
+            .on( 'change', function () {
+                table.column( i )
+                    .search( $(this).val() )
+                    .draw();
+            } );
+
+        table.column( i ).data().unique().sort().each( function ( d, j ) {
+            select.append( '<option value="'+d+'">'+d+'</option>' )
+        } );
+    } );
+    */
+
 } );
+
+//on change function for drop down select
+$("#selectInst").on('change', function(){
+
+    table
+        // searching in specific column (holding institution code)
+        .column(7)
+        .search($('#ddl').val())
+        .draw();
+});
 
 //script that handles the viewing of the modal CBVs
 $('#modal').on('show.bs.modal', function (event) {
@@ -70,7 +120,6 @@ $('#modal').on('show.bs.modal', function (event) {
         $(this).removeData('bs.modal');
     });
 });
-
 
 </script>
 {% endblock %}
