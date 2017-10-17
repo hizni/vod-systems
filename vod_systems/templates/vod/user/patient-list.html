@@ -15,6 +15,9 @@
             Show me patients belonging to
             <!-- todo add an ALL function to show all patients that a user can see on all INSTITUTIONS they have permission to -->
             <select id ="selectInst" name="selectInst">
+                {% if user_institutions_list|length > 1 %}
+                    <option value="all">Show all...</option>
+                {% endif %}
                 {% for i in user_institutions_list %}
                     <option value="{{ i.fk_institution_id.id }}">{{ i.fk_institution_id.description }}</option>
                 {% endfor %}
@@ -101,11 +104,22 @@ $(document).ready(function() {
 //on change function for drop down select
 $("#selectInst").on('change', function(){
 
-    table
-        // searching in specific column (holding institution code)
-        .column(7)
-        .search($('#ddl').val())
-        .draw();
+    if ($('#selectInst').val() == 'all'){
+        table
+            // clearing any filtering that may have been in effect
+            .column(7)
+            .search('')
+            .draw();
+    }
+    else{
+        table
+            // searching in specific column (holding institution code)
+            .column(7)
+            .search($('#selectInst').val())
+            .draw();
+    }
+
+
 });
 
 //script that handles the viewing of the modal CBVs
