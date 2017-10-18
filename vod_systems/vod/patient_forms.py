@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from models import Patient, User_Institution
+from models import Patient, User_Institution, Institution
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
@@ -19,7 +19,6 @@ class PatientCreateUpdateForm(ModelForm):
                                         widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
                                                                        "pickSeconds": False
                                                                        }))
-    # institutions = forms.ModelChoiceField(required=True, queryset=User_Institution.objects.all())
 
     class Meta:
         model = Patient
@@ -28,7 +27,8 @@ class PatientCreateUpdateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PatientCreateUpdateForm, self).__init__(*args, **kwargs)
 
-        # self.fields['institutions'].choices = ((x.code, x.description) for x in User_Institution.objects.all().filter(fk_user_id=self.instance.id))
+        self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % (obj.fk_institution_id.description)
+
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
@@ -39,6 +39,7 @@ class PatientCreateUpdateForm(ModelForm):
         self.helper.help_text_inline = True
         self.helper.form_show_errors = True
         self.helper.attrs = {'data-validate': 'parsley'}
+
         self.helper.layout = Layout(
             # Layout of crispy-forms
             # Default: required = false
@@ -71,7 +72,8 @@ class PatientCreateUpdateForm(ModelForm):
                 ),
                 Tab(
                     'Institution Details',
-                    Field('fk_institution_id', id='fk_institution_id'),
+                    HTML('Select the institution(s) this patient belongs to: '),
+                    Field('fk_institution_id', id='fk_institution_id', label='')
                 )
             ),
             FormActions(
@@ -99,6 +101,8 @@ class PatientRetireForm(ModelForm):
         self.helper.help_text_inline = True
         self.helper.form_show_errors = True
         self.helper.attrs = {'data-validate': 'parsley'}
+
+
 
         self.helper.layout = Layout(
             # Layout of crispy-forms
