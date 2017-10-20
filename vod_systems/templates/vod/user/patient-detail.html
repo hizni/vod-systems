@@ -6,14 +6,55 @@
 <div class="panel panel-default">
     <div class="panel-heading">Patient Details</div>
     <div class="panel-body">
-
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td> Id </td><td>{{ object.id }}</td>
+                        <td> Forename </td><td>{{ object.first_name }}</td>
+                        <td> Surname </td><td>{{ object.surname }}</td>
+                    </tr>
+                    <tr>
+                        <td> Gender </td><td>{{ object.gender }}</td>
+                        <td> Date of Birth </td><td>{{ object.date_of_birth }}</td>
+                        <td> Date of Death </td><td>{{ object.date_of_death }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
     </div>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading">Patient Aliases</div>
+    <div class="panel-heading">Patient Aliases
+    <div class="pull-right">
+                <a id="btnAddAlias" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias' %}">
+                    <span class="glyphicon glyphicon-plus-sign"> </span>
+                    Add Alias
+                </a>
+            </div>
+    </div>
     <div class="panel-body">
+        <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <td> Patient treated at: </td><td>{{ object.fk_institution_id.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Identifier Type</th>
+                        <th>Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ patient_ids.id }}</td>
+                        <td>{{ patient_ids.first_name }}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        {% for i in patient_ids %}
 
+        {% endfor %}
 
     </div>
 </div>
@@ -29,15 +70,6 @@
 <div class="modal fade" id="modal"></div>
 
 <script>
-
-
-var table;
-$(document).ready(function() {
-    table = $('#example').DataTable({
-        "bFilter": false,  // switch of search functionality
-    });
-
-} );
 
 
 //script that handles the viewing of the modal CBVs
