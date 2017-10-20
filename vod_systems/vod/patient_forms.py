@@ -1,11 +1,43 @@
 from django.forms import ModelForm
 from django import forms
-from models import Patient, User_Institution, Institution
+from models import Patient,Patient_Identifier
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Submit, HTML, Button
+from crispy_forms.layout import Layout, Field, Submit, HTML, Button, Div
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
 from bootstrap3_datetime.widgets import DateTimePicker
+
+
+class PatientAliasCreateForm(ModelForm):
+
+    class Meta:
+        model = Patient_Identifier
+        fields = ['department_id' , 'fk_identifier_type', 'pt_identifier_type_value']
+
+    def __init__(self, *args, **kwargs):
+        super(PatientAliasCreateForm, self).__init__(*args, **kwargs)
+
+        self.fields['fk_identifier_type'].label_from_instance = lambda obj: "%s" % obj.description
+        self.helper = FormHelper()
+
+        self.helper.form_id = 'form'
+        self.helper.form_action = reverse('patient-create-alias')
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'generic-modal'
+        self.helper.form_show_labels = True
+        self.helper.help_text_inline = True
+        self.helper.form_show_errors = True
+        self.helper.attrs = {'data-validate': 'parsley'}
+
+        self.helper.layout = Layout(
+            Field('Department',
+                  id='department_id',
+                  required=False,
+                  ),
+            Field('fk_identifier_type',
+                  id='fk_identifier_type',
+                  ),
+        )
 
 
 class PatientCreateUpdateForm(ModelForm):
@@ -19,6 +51,7 @@ class PatientCreateUpdateForm(ModelForm):
                                         widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
                                                                        "pickSeconds": False
                                                                        }))
+    checkboxselectmultiple = forms.Field()
 
     class Meta:
         model = Patient
@@ -27,7 +60,8 @@ class PatientCreateUpdateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PatientCreateUpdateForm, self).__init__(*args, **kwargs)
 
-        self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % (obj.fk_institution_id.description)
+        self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % obj.fk_institution_id.description
+        self.fields['checkboxselectmultiple'].choices = ((x.fk_identifier_type.code, x.pt_identifier_type_value) for x in Patient_Identifier.objects.all())
 
         self.helper = FormHelper()
 
@@ -73,7 +107,7 @@ class PatientCreateUpdateForm(ModelForm):
                 Tab(
                     'Institution Details',
                     HTML('Select the institution(s) this patient belongs to: '),
-                    Field('fk_institution_id', id='fk_institution_id', label='')
+                    Field('fk_institution_id', id='fk_institution_id', label=''),
                 )
             ),
             FormActions(
@@ -101,8 +135,6 @@ class PatientRetireForm(ModelForm):
         self.helper.help_text_inline = True
         self.helper.form_show_errors = True
         self.helper.attrs = {'data-validate': 'parsley'}
-
-
 
         self.helper.layout = Layout(
             # Layout of crispy-forms

@@ -1,9 +1,9 @@
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.shortcuts import render, redirect
-from models import Patient, Datatype, Patient_Identifier ,User_Institution
+from models import Patient, Datatype, Patient_Identifier ,User_Institution, Transplant, Alias_Identifier
 from django.core.urlresolvers import reverse
 
-from patient_forms import PatientCreateUpdateForm, PatientRetireForm
+from patient_forms import PatientCreateUpdateForm, PatientRetireForm, PatientAliasCreateForm
 from parsley.decorators import parsleyfy
 
 """
@@ -13,6 +13,8 @@ Patient model Class Based Views
     PatientCreateView  - create a new data type
     PatientUpdateView  - update a selected data type
     PatientRetireView  - activate/deactivate the selected data type
+    
+    PatientIdentifiersListView - list all identifiers for a selected patient
 """
 
 
@@ -31,9 +33,40 @@ class PatientListView(ListView):
         return context
 
 
-class PatientDetailView(DetailView):
+class PatientIdentifiersDetailView(DetailView):
     model = Patient
     template_name = './vod/user/patient-detail.html'
+    view_title = 'Add new patient identifier'
+    selected_pk = 0
+
+    def get_object(self, queryset=None):
+        self.selected_pk = self.kwargs['id']
+        return Patient.objects.get(id=self.kwargs['id'])
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientIdentifiersDetailView, self).get_context_data(**kwargs)
+        context['patient_ids'] = Patient_Identifier.objects.filter(fk_patient_id=self.kwargs['id'])
+        context['patient_transplants'] = Transplant.objects.filter(fk_patient_id=self.kwargs['id'])
+        return context
+
+
+class PatientAliasCreateView(CreateView):
+    form_class = parsleyfy(PatientAliasCreateForm)
+    template_name = '../templates/common/generic-modal.html'
+    view_title = 'Create patient alias'
+
+    def get_form(self, form_class):
+        form = super(PatientAliasCreateView, self).get_form(form_class)
+        # form.fields['fk_institution_id'].queryset = User_Institution.objects.filter(fk_user_id=self.request.user.id)
+        form.fields['fk_identifier_type'].queryset = Alias_Identifier.objects.all()
+        return form
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('patient-detail')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form ,))
 
 
 class PatientCreateView(CreateView):
