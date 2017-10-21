@@ -26,7 +26,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">Patient Aliases
     <div class="pull-right">
-                <a id="btnAddAlias" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias' %}">
+                <a id="btnAddAlias" data-id="{{ object.id }}" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias'%}">
                     <span class="glyphicon glyphicon-plus-sign"> </span>
                     Add Alias
                 </a>
@@ -45,11 +45,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for i in patient_ids %}
                     <tr>
-                        <td>{{ patient_ids.id }}</td>
-                        <td>{{ patient_ids.first_name }}</td>
+                        <td>{{ i.fk_identifier_type.description }}</td>
+                        <td>{{ i.pt_identifier_type_value }}</td>
                         <td></td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         {% for i in patient_ids %}

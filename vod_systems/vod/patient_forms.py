@@ -9,15 +9,21 @@ from bootstrap3_datetime.widgets import DateTimePicker
 
 
 class PatientAliasCreateForm(ModelForm):
+    department_id = forms.Field(required=False)
 
     class Meta:
         model = Patient_Identifier
-        fields = ['department_id' , 'fk_identifier_type', 'pt_identifier_type_value']
+        fields = ['department_id', 'fk_patient_id', 'fk_identifier_type', 'pt_identifier_type_value']
+
 
     def __init__(self, *args, **kwargs):
         super(PatientAliasCreateForm, self).__init__(*args, **kwargs)
 
         self.fields['fk_identifier_type'].label_from_instance = lambda obj: "%s" % obj.description
+
+        self.fields['fk_patient_id'].initial = Patient.objects.get(id=2)
+        self.fields['fk_patient_id'].hidden = True
+
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
@@ -30,13 +36,20 @@ class PatientAliasCreateForm(ModelForm):
         self.helper.attrs = {'data-validate': 'parsley'}
 
         self.helper.layout = Layout(
-            Field('Department',
+            Field('department_id',
                   id='department_id',
-                  required=False,
                   ),
             Field('fk_identifier_type',
                   id='fk_identifier_type',
                   ),
+            Field('pt_identifier_type_value',
+                  id='pt_identifier_type_value',
+                  ),
+            Field('fk_patient_id', id='fk_patient_id', type="hidden", label=''),
+            FormActions(
+                Submit('save_changes', 'Save changes', css_class="btn-primary"),
+                Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
+            )
         )
 
 

@@ -59,11 +59,14 @@ class PatientAliasCreateView(CreateView):
         form = super(PatientAliasCreateView, self).get_form(form_class)
         # form.fields['fk_institution_id'].queryset = User_Institution.objects.filter(fk_user_id=self.request.user.id)
         form.fields['fk_identifier_type'].queryset = Alias_Identifier.objects.all()
+
         return form
 
     def form_valid(self, form):
+
+        # form.fields['fk_patient_id'] = User_Institution.objects.filter(fk_user_id=self.kwargs['id'])
         form.save()
-        return redirect('patient-detail')
+        return redirect('patient-list')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form ,))
