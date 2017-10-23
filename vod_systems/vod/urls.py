@@ -55,7 +55,7 @@ urlpatterns = [
     url(r'^patient/update/(?P<id>\d+)/$', PatientUpdateView.as_view(), name='patient-update'),
     url(r'^patient/delete/(?P<id>\d+)/$', PatientRetireView.as_view(), name='patient-retire'),
 
-    url(r'^patient/create-alias/$', PatientAliasCreateView.as_view(), name='patient-create-alias'),
+    url(r'^patient/create-alias/(?P<id>\d+)/$', PatientAliasCreateView.as_view(), name='patient-create-alias'),
 
     url(r'^patient/detail/(?P<id>\d+)/$', PatientIdentifiersDetailView.as_view(), name='patient-detail'),
 ]

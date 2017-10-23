@@ -1,5 +1,5 @@
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponseRedirect
 from models import Patient, Datatype, Patient_Identifier ,User_Institution, Transplant, Alias_Identifier
 from django.core.urlresolvers import reverse
 
@@ -55,18 +55,22 @@ class PatientAliasCreateView(CreateView):
     template_name = '../templates/common/generic-modal.html'
     view_title = 'Create patient alias'
 
+    def get_form_kwargs(self):
+        kwargs = super(PatientAliasCreateView, self).get_form_kwargs()
+        kwargs['pid'] = self.kwargs['id']
+        return kwargs
+
     def get_form(self, form_class):
         form = super(PatientAliasCreateView, self).get_form(form_class)
         # form.fields['fk_institution_id'].queryset = User_Institution.objects.filter(fk_user_id=self.request.user.id)
-        form.fields['fk_identifier_type'].queryset = Alias_Identifier.objects.all()
 
+        form.fields['fk_identifier_type'].queryset = Alias_Identifier.objects.all()
+        form.fields['fk_patient_id'].initial = Patient.objects.get(id=self.kwargs['id'])
         return form
 
     def form_valid(self, form):
-
-        # form.fields['fk_patient_id'] = User_Institution.objects.filter(fk_user_id=self.kwargs['id'])
         form.save()
-        return redirect('patient-list')
+        return redirect('patient-detail', id=self.kwargs['id'])
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form ,))

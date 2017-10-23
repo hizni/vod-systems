@@ -15,19 +15,16 @@ class PatientAliasCreateForm(ModelForm):
         model = Patient_Identifier
         fields = ['department_id', 'fk_patient_id', 'fk_identifier_type', 'pt_identifier_type_value']
 
-
     def __init__(self, *args, **kwargs):
+        self.pid = kwargs.pop('pid', None)
         super(PatientAliasCreateForm, self).__init__(*args, **kwargs)
 
         self.fields['fk_identifier_type'].label_from_instance = lambda obj: "%s" % obj.description
 
-        self.fields['fk_patient_id'].initial = Patient.objects.get(id=2)
-        self.fields['fk_patient_id'].hidden = True
-
         self.helper = FormHelper()
 
         self.helper.form_id = 'form'
-        self.helper.form_action = reverse('patient-create-alias')
+        self.helper.form_action = reverse('patient-create-alias', args=[self.pid])
         self.helper.form_method = 'post'
         self.helper.form_class = 'generic-modal'
         self.helper.form_show_labels = True
@@ -45,7 +42,7 @@ class PatientAliasCreateForm(ModelForm):
             Field('pt_identifier_type_value',
                   id='pt_identifier_type_value',
                   ),
-            Field('fk_patient_id', id='fk_patient_id', type="hidden", label=''),
+            Field('fk_patient_id', id='fk_patient_id', type='hidden', label=''),
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
