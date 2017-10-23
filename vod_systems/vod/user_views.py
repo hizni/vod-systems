@@ -23,7 +23,11 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('user-list')
+            # redirect app start page that user sees based on their permission
+            if user.is_superuser:
+                return redirect('user-list')
+            else:
+                return redirect('patient-list')
         else:
             # return render(request, 'vod/login.html', context)
             messages.add_message(request, messages.WARNING, 'User could not be logged in.')
