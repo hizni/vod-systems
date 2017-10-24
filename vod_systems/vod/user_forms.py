@@ -3,9 +3,27 @@ from django import forms
 from django.contrib.auth.models import User
 from models import Institution, User_Institution
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Submit, HTML, Button, Div
+from crispy_forms.layout import Layout, Field, Submit, HTML, Button, Div, ButtonHolder
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
+from django.contrib.auth.forms import AuthenticationForm
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            'username',
+            'password',
+            ButtonHolder(
+                Submit('login', 'Login', css_class='btn-primary')
+            )
+        )
 
 
 class UserCreateForm(ModelForm):

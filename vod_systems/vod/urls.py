@@ -12,12 +12,12 @@ from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateV
     PatientIdentifiersDetailView, PatientAliasCreateView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.upload_views import UploadListView
-from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView
+from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView, LoginView
 
 from vod_systems import views
 
 urlpatterns = [
-    url(r'login', user_views.login, name='vod-login'),
+    url(r'login', LoginView.as_view(), name='vod-login'),
     url(r'logout', views.landing, name='vod-logout'),
 
     # url routes for superuser (admin) related views

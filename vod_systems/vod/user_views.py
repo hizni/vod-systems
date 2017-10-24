@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 
+from django.contrib.auth.forms import AuthenticationForm
 from django.template import Context
 from django.contrib.auth import authenticate
 from django.template.context_processors import csrf
@@ -7,18 +8,20 @@ from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, FormView
 
-from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm
+
+from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm, LoginForm
 from models import User_Institution, Institution
 from parsley.decorators import parsleyfy
 
-
+'''
 def login(request):
     context = Context({})
     context.update(csrf(request))
     username = request.POST.get('username')
     password = request.POST.get('password')
+
     if username is not None:
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -37,6 +40,29 @@ def login(request):
         messages.add_message(request, messages.WARNING, 'Please enter a username and/or password.')
         context.update({'messages': messages.get_messages(request)})
         return render(request, './vod/login.html', context)
+'''
+
+class LoginView(FormView):
+    form_class = LoginForm
+    # success_url = redirect('user-list')
+    template_name = './vod/login.html'
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None and user.is_active:
+            # login(self.request, user)
+            auth_login(self.request, user)
+            if user.is_superuser:
+                self.success_url = reverse('user-list')
+            else:
+                self.success_url = reverse('patient-list')
+
+            return super(LoginView, self).form_valid(form)
+        else:
+            return redirect('vod-login')
 
 
 """

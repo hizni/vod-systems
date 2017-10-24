@@ -1,5 +1,6 @@
 {% extends "./common/base-includes.html" %}
 {% block content %}
+{% load crispy_forms_tags %}
  <div class="container">
 
     <div class="row">
@@ -11,36 +12,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
-
-                    {% if messages %}
-                        {% for message in messages %}
-                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                                    {{ message }}
-                            </li>
-                        {% endfor %}
-                    {% endif %}
-
-                    <form action="/vod/login" method="post" id="login-form">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="username">Username: </label>
-                            <input id="username" name="username" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Password: </label>
-                            <input id="password" type="password" name="password" class="form-control">
-                        </div>
-
-                        <span class="pull-right"><input type="submit" class="btn btn-primary" value="Submit"></span>
-                    </form>
+                    {% crispy form %}
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 
