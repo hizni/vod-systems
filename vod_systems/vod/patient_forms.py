@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from models import Patient,Patient_Identifier
+from models import Patient,Patient_Identifier, Transplant
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button, Div
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
@@ -41,6 +41,53 @@ class PatientAliasCreateForm(ModelForm):
                   ),
             Field('pt_identifier_type_value',
                   id='pt_identifier_type_value',
+                  ),
+            Field('fk_patient_id', id='fk_patient_id', type='hidden', label=''),
+            FormActions(
+                Submit('save_changes', 'Save changes', css_class="btn-primary"),
+                Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
+            )
+        )
+
+
+class PatientTransplantCreateForm(ModelForm):
+
+    class Meta:
+        model = Transplant
+        fields = ['number', 'fk_patient_id', 'fk_transplant_type','day_zero','start_weight','start_renal_function']
+
+    def __init__(self, *args, **kwargs):
+        self.pid = kwargs.pop('pid', None)
+
+        super(PatientTransplantCreateForm, self).__init__(*args, **kwargs)
+
+        self.fields['fk_transplant_type'].label_from_instance = lambda obj: "%s" % obj.description
+        self.helper = FormHelper()
+
+        self.helper.form_id = 'form'
+        self.helper.form_action = reverse('patient-create-transplant', args=[self.pid])
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'generic-modal'
+        self.helper.form_show_labels = True
+        self.helper.help_text_inline = True
+        self.helper.form_show_errors = True
+        self.helper.attrs = {'data-validate': 'parsley'}
+
+        self.helper.layout = Layout(
+            Field('number',
+                  id='number',
+                  ),
+            Field('fk_transplant_type',
+                  id='fk_transplant_type',
+                  ),
+            Field('day_zero',
+                  id='day_zero',
+                  ),
+            Field('start_weight',
+                  id='start_weight',
+                  ),
+            Field('start_renal_function',
+                  id='start_renal_function',
                   ),
             Field('fk_patient_id', id='fk_patient_id', type='hidden', label=''),
             FormActions(

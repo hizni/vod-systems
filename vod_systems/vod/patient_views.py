@@ -1,9 +1,11 @@
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.shortcuts import render, redirect,HttpResponseRedirect
-from models import Patient, Datatype, Patient_Identifier ,User_Institution, Transplant, Alias_Identifier
+from models import Patient, Patient_Identifier ,User_Institution, Transplant, Transplant_Type, Alias_Identifier
 from django.core.urlresolvers import reverse
 
-from patient_forms import PatientCreateUpdateForm, PatientRetireForm, PatientAliasCreateForm
+from patient_forms import PatientCreateUpdateForm, PatientRetireForm, PatientAliasCreateForm, \
+    PatientTransplantCreateForm
+
 from parsley.decorators import parsleyfy
 
 """
@@ -74,6 +76,31 @@ class PatientAliasCreateView(CreateView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form ,))
+
+
+class PatientTransplantCreateView(CreateView):
+    form_class = parsleyfy(PatientTransplantCreateForm)
+    template_name = '../templates/common/generic-modal.html'
+    view_title = 'Create new transplant'
+
+    def get_form_kwargs(self):
+        kwargs = super(PatientTransplantCreateView, self).get_form_kwargs()
+        kwargs['pid'] = self.kwargs['id']
+        return kwargs
+
+    def get_form(self, form_class):
+        form = super(PatientTransplantCreateView,self).get_form(form_class)
+
+        form.fields['fk_transplant_type'].queryset = Transplant_Type.objects.all()
+        form.fields['fk_patient_id'].initial = Patient.objects.get(id=self.kwargs['id'])
+        return form
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('patient-detail', id=self.kwargs['id'])
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form, ))
 
 
 class PatientCreateView(CreateView):

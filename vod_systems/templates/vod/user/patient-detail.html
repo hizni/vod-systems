@@ -6,7 +6,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">Patient Details</div>
     <div class="panel-body">
-            <table id="example" class="display" cellspacing="0" width="100%">
+            <table id="detail" class="display" cellspacing="0" width="100%">
                 <tbody>
                     <tr>
                         <td> Id </td><td>{{ object.id }}</td>
@@ -25,15 +25,16 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-heading">Patient Aliases
-    <div class="pull-right">
-                <a id="btnAddAlias" data-id="{{ object.id }}" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias' id=object.id%}">
-                    <span class="glyphicon glyphicon-plus-sign"> </span>
-                    Add Alias
-                </a>
-            </div>
-    </div>
+        <div class="pull-right">
+                    <a id="btnAddAlias" data-id="{{ object.id }}" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias' id=object.id%}">
+                        <span class="glyphicon glyphicon-plus-sign"> </span>
+                        Add Alias
+                    </a>
+                </div>
+        </div>
     <div class="panel-body">
         Patient treated at:  {{ object.fk_institution_id.description }}
+
         <table id="example" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -52,18 +53,44 @@
                     {% endfor %}
                 </tbody>
             </table>
-        {% for i in patient_ids %}
-
-        {% endfor %}
-
     </div>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading">Patient Results</div>
+    <div class="panel-heading">Transplant Details
+        <div class="pull-right">
+                    <a id="btnAddTrans" data-id="{{ object.id }}" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientTransplant" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-transplant' id=object.id%}">
+                        <span class="glyphicon glyphicon-plus-sign"> </span>
+                        Add Transplant
+                    </a>
+                </div>
+        </div>
     <div class="panel-body">
-
-
-
+        <table id="transplantTable" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Transplant Type</th>
+                    <th>Number</th>
+                    <th>Day zero</th>
+                    <th>Start weight</th>
+                    <th>Renal function</th>
+                    <th>Data points</th>
+                    <th>Renal function</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in patient_transplants %}
+                <tr>
+                    <td>{{ i.fk_transplant_type.description }}</td>
+                    <td>{{ i.number }}</td>
+                    <td>{{ i.day_zero }}</td>
+                    <td>{{ i.start_weight }}</td>
+                    <td>{{ i.start_renal_function }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -71,6 +98,32 @@
 
 <script>
 
+var table;
+$(document).ready(function() {
+    //initialising DataTables control
+    table = $('#example').DataTable({
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "pageLength": 5,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+    });
+
+    table2 = $('#transplantTable').DataTable({
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "pageLength": 5,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+    });
+
+} );
 
 //script that handles the viewing of the modal CBVs
 $('#modal').on('show.bs.modal', function (event) {

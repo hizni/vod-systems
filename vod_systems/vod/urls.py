@@ -9,55 +9,56 @@ from vod.institution_views import InstitutionListView, InstitutionCreateView, In
     InstitutionRetireView
 
 from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateView, PatientRetireView, \
-    PatientIdentifiersDetailView, PatientAliasCreateView
+    PatientIdentifiersDetailView, PatientAliasCreateView, PatientTransplantCreateView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.upload_views import UploadListView
 from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView, LoginView
 
-from vod_systems import views
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'login', LoginView.as_view(), name='vod-login'),
-    url(r'logout', views.landing, name='vod-logout'),
+    url(r'logout', user_views.logout, name='vod-logout'),
 
     # url routes for superuser (admin) related views
-    url(r'^user/list/$', UserListView.as_view(), name='user-list'),
-    url(r'^user/create/$', UserCreateView.as_view(), name='user-create'),
-    url(r'^user/update/(?P<id>\d+)/$', UserUpdateView.as_view(), name='user-update'),
-    url(r'^user/delete/(?P<id>\d+)/$', UserRetireView.as_view(), name='user-retire'),
+    url(r'^user/list/$', login_required(UserListView.as_view()), name='user-list'),
+    url(r'^user/create/$', login_required(UserCreateView.as_view()), name='user-create'),
+    url(r'^user/update/(?P<id>\d+)/$', login_required(UserUpdateView.as_view()), name='user-update'),
+    url(r'^user/delete/(?P<id>\d+)/$', login_required(UserRetireView.as_view()), name='user-retire'),
 
-    url(r'^institution/list/$', InstitutionListView.as_view(), name='institution-list'),
-    url(r'^institution/create/$', InstitutionCreateView.as_view(), name='institution-create'),
-    url(r'^institution/update/(?P<id>\d+)/$', InstitutionUpdateView.as_view(), name='institution-update'),
-    url(r'^institution/delete/(?P<id>\d+)/$', InstitutionRetireView.as_view(), name='institution-retire'),
+    url(r'^institution/list/$', login_required(InstitutionListView.as_view()), name='institution-list'),
+    url(r'^institution/create/$', login_required(InstitutionCreateView.as_view()), name='institution-create'),
+    url(r'^institution/update/(?P<id>\d+)/$', login_required(InstitutionUpdateView.as_view()), name='institution-update'),
+    url(r'^institution/delete/(?P<id>\d+)/$', login_required(InstitutionRetireView.as_view()), name='institution-retire'),
 
 
-    url(r'^aliasid/list/$', AliasIdListView.as_view(), name='alias-id-list'),
-    url(r'^aliasid/create/$', AliasIdCreateView.as_view(), name='alias-id-create'),
-    url(r'^aliasid/update/(?P<id>\d+)/$', AliasIdUpdateView.as_view(), name='alias-id-update'),
-    url(r'^aliasid/delete/(?P<id>\d+)/$', AliasIdRetireView.as_view(), name='alias-id-retire'),
+    url(r'^aliasid/list/$', login_required(AliasIdListView.as_view()), name='alias-id-list'),
+    url(r'^aliasid/create/$', login_required(AliasIdCreateView.as_view()), name='alias-id-create'),
+    url(r'^aliasid/update/(?P<id>\d+)/$', login_required(AliasIdUpdateView.as_view()), name='alias-id-update'),
+    url(r'^aliasid/delete/(?P<id>\d+)/$', login_required(AliasIdRetireView.as_view()), name='alias-id-retire'),
 
-    url(r'^datatype/list/$', DataTypeListView.as_view(), name='datatype-list'),
-    url(r'^datatype/create/$', DataTypeCreateView.as_view(), name='datatype-create'),
-    url(r'^datatype/update/(?P<id>\d+)/$', DataTypeUpdateView.as_view(), name='datatype-update'),
-    url(r'^datatype/delete/(?P<id>\d+)/$', DataTypeRetireView.as_view(), name='datatype-retire'),
+    url(r'^datatype/list/$', login_required(DataTypeListView.as_view()), name='datatype-list'),
+    url(r'^datatype/create/$', login_required(DataTypeCreateView.as_view()), name='datatype-create'),
+    url(r'^datatype/update/(?P<id>\d+)/$', login_required(DataTypeUpdateView.as_view()), name='datatype-update'),
+    url(r'^datatype/delete/(?P<id>\d+)/$', login_required(DataTypeRetireView.as_view()), name='datatype-retire'),
 
-    url(r'^transplant/list/$', TransplantListView.as_view(), name='transplant-list'),
-    url(r'^transplant/create/$', TransplantCreateView.as_view(), name='transplant-create'),
-    url(r'^transplant/update/(?P<id>\d+)/$', TransplantUpdateView.as_view(), name='transplant-update'),
-    url(r'^transplant/delete/(?P<id>\d+)/$', TransplantRetireView.as_view(), name='transplant-retire'),
+    url(r'^transplant/list/$', login_required(TransplantListView.as_view()), name='transplant-list'),
+    url(r'^transplant/create/$', login_required(TransplantCreateView.as_view()), name='transplant-create'),
+    url(r'^transplant/update/(?P<id>\d+)/$', login_required(TransplantUpdateView.as_view()), name='transplant-update'),
+    url(r'^transplant/delete/(?P<id>\d+)/$', login_required(TransplantRetireView.as_view()), name='transplant-retire'),
 
     # url routes for staff (normal user) related views
-    url(r'^upload/list/$', UploadListView.as_view(), name='upload-list'),
+    url(r'^upload/list/$', login_required(UploadListView.as_view()), name='upload-list'),
 
-    url(r'^patient/list/$', PatientListView.as_view(), name='patient-list'),
-    url(r'^patient/create/$', PatientCreateView.as_view(), name='patient-create'),
-    url(r'^patient/update/(?P<id>\d+)/$', PatientUpdateView.as_view(), name='patient-update'),
-    url(r'^patient/delete/(?P<id>\d+)/$', PatientRetireView.as_view(), name='patient-retire'),
+    url(r'^patient/list/$', login_required(PatientListView.as_view()), name='patient-list'),
+    url(r'^patient/create/$', login_required(PatientCreateView.as_view()), name='patient-create'),
+    url(r'^patient/update/(?P<id>\d+)/$', login_required(PatientUpdateView.as_view()), name='patient-update'),
+    url(r'^patient/delete/(?P<id>\d+)/$', login_required(PatientRetireView.as_view()), name='patient-retire'),
 
-    url(r'^patient/create-alias/(?P<id>\d+)/$', PatientAliasCreateView.as_view(), name='patient-create-alias'),
+    url(r'^patient/create-alias/(?P<id>\d+)/$', login_required(PatientAliasCreateView.as_view()), name='patient-create-alias'),
+    url(r'^patient/create-transplant/(?P<id>\d+)/$', login_required(PatientTransplantCreateView.as_view()), name='patient-create-transplant'),
 
-    url(r'^patient/detail/(?P<id>\d+)/$', PatientIdentifiersDetailView.as_view(), name='patient-detail'),
+    url(r'^patient/detail/(?P<id>\d+)/$', login_required(PatientIdentifiersDetailView.as_view()), name='patient-detail'),
 ]
 
 if settings.DEBUG:
