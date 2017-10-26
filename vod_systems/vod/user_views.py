@@ -9,32 +9,7 @@ from parsley.decorators import parsleyfy
 from models import User_Institution, Institution
 from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm, LoginForm
 
-'''
-def login(request):
-    context = Context({})
-    context.update(csrf(request))
-    username = request.POST.get('username')
-    password = request.POST.get('password')
 
-    if username is not None:
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            auth_login(request, user)
-            # redirect app start page that user sees based on their permission
-            if user.is_superuser:
-                return redirect('user-list')
-            else:
-                return redirect('patient-list')
-        else:
-            # return render(request, 'vod/login.html', context)
-            messages.add_message(request, messages.WARNING, 'User could not be logged in.')
-            context.update({'messages': messages.get_messages(request)})
-            return render(request, './vod/login.html', context)
-    else:
-        messages.add_message(request, messages.WARNING, 'Please enter a username and/or password.')
-        context.update({'messages': messages.get_messages(request)})
-        return render(request, './vod/login.html', context)
-'''
 
 
 def logout(request):
