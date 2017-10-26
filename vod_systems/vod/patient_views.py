@@ -111,7 +111,8 @@ class PatientCreateView(CreateView):
 
     def get_form(self, form_class):
         form = super(PatientCreateView, self).get_form(form_class)
-        form.fields['fk_institution_id'].queryset = User_Institution.objects.filter(fk_user_id=self.request.user.id)
+        # form.fields['fk_institution_id'].queryset = User_Institution.objects.filter(fk_user_id=self.request.user.id)
+        form.fields['fk_institution_id'].queryset = Institution.objects.all()
         return form
 
     def form_valid(self, form):
@@ -119,7 +120,7 @@ class PatientCreateView(CreateView):
         return redirect('patient-list')
 
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form ,))
+        return self.render_to_response(self.get_context_data(form=form,))
 
 
 class PatientUpdateView(UpdateView):

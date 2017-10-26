@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
-from models import Upload_History, Transplant
+from models import Upload_History, Patient_Transplant
 from django.core.files.storage import FileSystemStorage
 import datetime
 import csv

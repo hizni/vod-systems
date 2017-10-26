@@ -99,26 +99,18 @@ class PatientTransplantCreateForm(ModelForm):
 
 class PatientCreateUpdateForm(ModelForm):
 
-    date_of_birth = forms.DateTimeField(required = False,
-                                        widget = DateTimePicker(options={"format": "YYYY-MM-DD",
-                                                                          "pickTime": False
-                                                                         }))
-
-    date_of_death = forms.DateTimeField(required=False,
-                                        widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
-                                                                       "pickSeconds": False
-                                                                       }))
-    checkboxselectmultiple = forms.Field()
+    # checkboxselectmultiple = forms.Field()
 
     class Meta:
         model = Patient
-        fields = ['surname', "first_name", 'gender', 'date_of_birth', 'date_of_death', 'fk_institution_id']
+        # fields = ['surname', "first_name", 'gender', 'date_of_birth', 'date_of_death', 'fk_institution_id']
+        fields = ['surname', 'first_name', 'gender', 'date_of_birth', 'fk_institution_id']
 
     def __init__(self, *args, **kwargs):
         super(PatientCreateUpdateForm, self).__init__(*args, **kwargs)
 
-        self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % obj.fk_institution_id.description
-        self.fields['checkboxselectmultiple'].choices = ((x.fk_identifier_type.code, x.pt_identifier_type_value) for x in Patient_Identifier.objects.all())
+        # self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % obj.fk_institution_id.description
+        # self.fields['checkboxselectmultiple'].choices = ((x.fk_identifier_type.code, x.pt_identifier_type_value) for x in Patient_Identifier.objects.all())
 
         self.helper = FormHelper()
 
@@ -150,15 +142,10 @@ class PatientCreateUpdateForm(ModelForm):
                           data_parsley_trigger='change'
                           ),
                     Field('gender',
-                          id='gender',
-                          data_parsley_length="[0,10]",
-                          data_parsley_trigger='change'
+                          id='gender'
                           ),
                     Field('date_of_birth',
                           id='date_of_birth'
-                          ),
-                    Field('date_of_death',
-                          id='date_of_death'
                           ),
                 ),
                 Tab(
