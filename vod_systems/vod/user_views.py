@@ -1,19 +1,13 @@
-from django.shortcuts import render, redirect, HttpResponse
-
-from django.contrib.auth.forms import AuthenticationForm
-from django.template import Context
-from django.contrib.auth import authenticate
-from django.template.context_processors import csrf
-from django.contrib.auth import login as auth_login
-from django.contrib import messages
+from django.contrib import auth
+from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, UpdateView, FormView
-
-
-from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm, LoginForm
-from models import User_Institution, Institution
 from parsley.decorators import parsleyfy
+
+from models import User_Institution, Institution
+from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm, LoginForm
 
 '''
 def login(request):
@@ -41,6 +35,26 @@ def login(request):
         context.update({'messages': messages.get_messages(request)})
         return render(request, './vod/login.html', context)
 '''
+
+
+def logout(request):
+    """
+    Removes the authenticated user's ID from the request and flushes their
+    session data.
+    """
+    # Dispatch the signal before the user is logged out so the receivers have a
+    # chance to find out *who* logged out.
+    user = getattr(request, 'user', None)
+    if hasattr(user, 'is_authenticated') and not user.is_authenticated():
+        user = None
+
+    request.session.flush()
+    if hasattr(request, 'user'):
+        from django.contrib.auth.models import AnonymousUser
+        request.user = AnonymousUser()
+
+    return redirect('index')
+
 
 class LoginView(FormView):
     form_class = LoginForm

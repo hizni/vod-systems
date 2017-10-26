@@ -76,5 +76,7 @@ class Upload_History(models.Model):
     upload_date = models.DateTimeField()
     uploaded_by = models.CharField(max_length=255)
 
+# todo - Add Data model (to hold user data)
+
 
 
