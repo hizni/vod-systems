@@ -8,6 +8,13 @@ GENDER_CHOICES = (
     ('U', 'Unknown'),
 )
 
+UPLOAD_PROCESSING = (
+    ('U', 'Uploaded'),
+    ('C', 'Cleaned'),
+    ('E', 'Errored'),
+    ('N', 'Null'),
+)
+
 # metadata - models hold meta data that is used to describe data held in primary tables
 
 
@@ -24,8 +31,9 @@ class Alias_Identifier(models.Model):
 
 
 class Datatype(models.Model):
-    code = models.CharField(max_length=20)  # units
+    code = models.CharField(max_length=100)  # units
     description = models.CharField(max_length=255)
+    unit = models.CharField(max_length=20)
     is_active = models.BooleanField(default=True)
 
 
@@ -61,7 +69,7 @@ class Patient_Identifier(models.Model):
     pt_identifier_type_value = models.CharField(max_length=50)
 
 
-class Transplant(models.Model):
+class Patient_Transplant(models.Model):
     fk_patient_id = models.ForeignKey(Patient)
     number = models.IntegerField()
     fk_transplant_type = models.ForeignKey(Transplant_Type)
@@ -73,10 +81,40 @@ class Transplant(models.Model):
 class Upload_History(models.Model):
     filename = models.CharField(max_length=255)
     outcome = models.CharField(max_length=255)
+    rows_uploaded  = models.IntegerField()
+    row_cleaned = models.IntegerField()
+    rows_errored = models.IntegerField()
     upload_date = models.DateTimeField()
     uploaded_by = models.CharField(max_length=255)
 
-# todo - Add Data model (to hold user data)
+
+class Clean_Uploaded_Data(models.Model):
+    fk_batch_id = models.ForeignKey(Upload_History)
+    fk_patient = models.ForeignKey(Patient_Identifier)
+    fk_transplant = models.ForeignKey(Patient_Transplant)
+    fk_datatype = models.ForeignKey(Datatype)
+    value = models.FloatField()
+    date_occurred = models.DateTimeField()
+
+
+class Raw_Uploaded_Data(models.Model):
+    fk_pt_institutional_id = models.CharField(max_length=100)
+    fk_pt_department_id = models.CharField(max_length=100)
+    fk_pt_identifier_type = models.CharField(max_length=50)
+    fk_pt_identifier_type_value = models.CharField(max_length=50)
+    fk_transplant_number = models.IntegerField()
+    fk_transplant_type = models.CharField(max_length=100)
+    fk_transplant_day_zero = models.DateTimeField()
+    fk_transplant_start_weight_data_type= models.CharField(max_length=100)
+    fk_transplant_start_weight = models.FloatField()
+    fk_transplant_start_renal_function_data_type = models.CharField(max_length=100)
+    fk_transplant_start_renal_function = models.FloatField()
+    fk_data_type = models.CharField(max_length=100)
+    data_value = models.FloatField()
+    data_date = models.DateTimeField()
+    upload_processing = models.CharField(max_length=5, choices=UPLOAD_PROCESSING)
+
+
 
 
 
