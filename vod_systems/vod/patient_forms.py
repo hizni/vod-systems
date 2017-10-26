@@ -109,7 +109,7 @@ class PatientCreateUpdateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PatientCreateUpdateForm, self).__init__(*args, **kwargs)
 
-        # self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % obj.fk_institution_id.description
+        self.fields['fk_institution_id'].label_from_instance = lambda obj: "%s" % obj.description
         # self.fields['checkboxselectmultiple'].choices = ((x.fk_identifier_type.code, x.pt_identifier_type_value) for x in Patient_Identifier.objects.all())
 
         self.helper = FormHelper()

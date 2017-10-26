@@ -112,7 +112,7 @@ class PatientCreateView(CreateView):
     def get_form(self, form_class):
         form = super(PatientCreateView, self).get_form(form_class)
         # form.fields['fk_institution_id'].queryset = User_Institution.objects.filter(fk_user_id=self.request.user.id)
-        form.fields['fk_institution_id'].queryset = Institution.objects.all()
+        form.fields['fk_institution_id'].queryset = Institution.objects.all().filter(id=User_Institution.objects.filter(fk_user_id=self.request.user.id).values('fk_institution_id'))
         return form
 
     def form_valid(self, form):
