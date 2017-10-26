@@ -100,11 +100,11 @@ class UserCreateForm(ModelForm):
                     Field('is_staff',
                           id='is_staff',
                           name='role[]',
-                          data_parsley_mincheck="1"
+                          data_parsley_mincheck="1",
                           ),
                     Field('is_superuser',
                           id='is_superuser',
-                          name='role[]'
+                          name='role[]',
                           ),
                 ),
                 Tab(

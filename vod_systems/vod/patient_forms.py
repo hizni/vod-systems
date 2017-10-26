@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from models import Patient,Patient_Identifier, Transplant
+from models import Patient,Patient_Identifier, Patient_Transplant
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button, Div
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
@@ -53,7 +53,7 @@ class PatientAliasCreateForm(ModelForm):
 class PatientTransplantCreateForm(ModelForm):
 
     class Meta:
-        model = Transplant
+        model = Patient_Transplant
         fields = ['number', 'fk_patient_id', 'fk_transplant_type','day_zero','start_weight','start_renal_function']
 
     def __init__(self, *args, **kwargs):

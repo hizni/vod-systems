@@ -1,6 +1,6 @@
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.shortcuts import render, redirect,HttpResponseRedirect
-from models import Patient, Patient_Identifier ,User_Institution, Transplant, Transplant_Type, Alias_Identifier
+from models import Patient, Patient_Identifier ,User_Institution, Patient_Transplant, Transplant_Type, Alias_Identifier, Institution
 from django.core.urlresolvers import reverse
 
 from patient_forms import PatientCreateUpdateForm, PatientRetireForm, PatientAliasCreateForm, \
@@ -17,6 +17,7 @@ Patient model Class Based Views
     PatientRetireView  - activate/deactivate the selected data type
     
     PatientIdentifiersListView - list all identifiers for a selected patient
+    PatientAliasCreateView - create a new alias for a patient
 """
 
 
@@ -48,7 +49,7 @@ class PatientIdentifiersDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PatientIdentifiersDetailView, self).get_context_data(**kwargs)
         context['patient_ids'] = Patient_Identifier.objects.filter(fk_patient_id=self.kwargs['id'])
-        context['patient_transplants'] = Transplant.objects.filter(fk_patient_id=self.kwargs['id'])
+        context['patient_transplants'] = Patient_Transplant.objects.filter(fk_patient_id=self.kwargs['id'])
         return context
 
 

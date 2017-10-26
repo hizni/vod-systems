@@ -10,7 +10,7 @@ class DatatypeCreateUpdateForm(ModelForm):
 
     class Meta:
         model = Datatype
-        fields = ['code', 'description']
+        fields = ['code', 'description', 'unit']
 
     def __init__(self, *args, **kwargs):
         super(DatatypeCreateUpdateForm, self).__init__(*args, **kwargs)
@@ -35,7 +35,7 @@ class DatatypeCreateUpdateForm(ModelForm):
             Field('code',
                   id='code',
                   required=True,
-                  data_parsley_length="[0,20]",
+                  data_parsley_length="[0,100]",
                   data_parsley_trigger='change'
                   ),
             Field('description',
@@ -43,7 +43,11 @@ class DatatypeCreateUpdateForm(ModelForm):
                   data_parsley_length="[0,255]",
                   data_parsley_trigger='change'
                   ),
-
+            Field('unit',
+                  id='unit',
+                  data_parsley_length="[0,20]",
+                  data_parsley_trigger='change'
+                  ),
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),

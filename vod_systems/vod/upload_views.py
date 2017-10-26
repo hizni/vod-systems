@@ -89,13 +89,13 @@ class UploadListView(ListView):
             data_value = record['data_value']
             data_date = record['data_date']
 
-            account = Transplant(day_zero=pk_transplant_day_zero, start_weight=data_value)
+            account = Patient_Transplant(day_zero=pk_transplant_day_zero, start_weight=data_value)
 
             list_data.append(account)
 
         if list_data:
             # bulk_create will create multiple object in a single query
-            created_accounts = Transplant.objects.bulk_create(list_data)
+            created_accounts = Patient_Transplant.objects.bulk_create(list_data)
 
             if len(list_data) == len(created_accounts):
                 result = True
