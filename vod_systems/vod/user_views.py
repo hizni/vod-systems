@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -41,8 +42,11 @@ class LoginView(FormView):
         password = form.cleaned_data['password']
         user = authenticate(username=username, password=password)
 
-        if user is not None and user.is_active:
-            # login(self.request, user)
+        if not user or not user.is_active:
+            # raise forms.ValidationError("Sorry, that login was invalid. Please try again.")
+            messages.warning(self.request, "Sorry, that login was invalid. Please try again.")
+            return redirect('vod-login')
+        else:
             auth_login(self.request, user)
             if user.is_superuser:
                 self.success_url = reverse('user-list')
@@ -50,8 +54,11 @@ class LoginView(FormView):
                 self.success_url = reverse('patient-list')
 
             return super(LoginView, self).form_valid(form)
-        else:
-            return redirect('vod-login')
+
+    def form_invalid(self, form):
+        messages.info(self.request, "Please make sure to correctly fill the form")
+
+        return super(LoginView, self).form_invalid(form)
 
 
 """
