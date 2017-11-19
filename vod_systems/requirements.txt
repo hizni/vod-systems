@@ -1,3 +1,4 @@
 Django==1.8.3
 django-crispy-forms==1.6.1
 django-parsley==0.6
+selenium==3.7.0
