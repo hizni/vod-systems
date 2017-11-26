@@ -86,7 +86,7 @@
                 var fieldLabelText = fieldLabel.clone().children().remove().end().text().trim();
                 var fieldName = fieldInstance.$element.attr("name");
                 //var $m = $('<li data-related-field-name="' + fieldName + '"><a data-related-field-name="' + fieldName + '" href="#na"><strong>' + fieldLabelText + '</strong> - ' + messages[i] + '</a></li>');
-                var $m = $('<li data-related-field-name="' + fieldName + '"><strong>' + fieldLabelText + '</strong> - ' + messages[i] + '</li>');
+                var $m = $('<li data-related-field-name="' + fieldName + '">' + messages[i] + '</li>');
                 $.validationErrors.list.append($m);
 
                 //Suppress the parsley error message being displayed in the form body
@@ -104,12 +104,12 @@
         });
 
         // When there's a click on a error message from the div
-        $(document).on('click', 'a[data-related-field-name]', function() {
+        //$(document).on('click', 'a[data-related-field-name]', function() {
 
             // take the field's name from the attribute
-            var name = $(this).attr('data-related-field-name');
-            $("[name=" + name + "]:first").focus();
-        });
+         //   var name = $(this).attr('data-related-field-name');
+         //   $("[name=" + name + "]:first").focus();
+        //});
     });
 
 
