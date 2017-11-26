@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from models import Institution, User_Institution
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Submit, HTML, Button, ButtonHolder
+from crispy_forms.layout import Layout, Field, Submit, HTML, Button, ButtonHolder, Div
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
 
@@ -26,8 +26,6 @@ class LoginForm(forms.Form):
 
 
 class UserCreateForm(ModelForm):
-    # helper = FormHelper()
-    # helper.form_tag = False
 
     # setting up properties of html components to do with the field and associated components
     # but the error text message does seem to get set here..... html5 error message?
@@ -36,7 +34,7 @@ class UserCreateForm(ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput,
                                        label='Password Check',
                                        help_text='Re-enter the password..')
-    checkboxselectmultiple = forms.MultipleChoiceField(
+    checkbox_select_multiple = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'overflow : scroll; height:200'}),
         label='Institutions',
         required=True)
@@ -44,16 +42,17 @@ class UserCreateForm(ModelForm):
     is_superuser = forms.BooleanField(label='Administrator')
 
     class Meta:
+        # model being referenced
         model = User
+        # fields in model being handled
         fields = ['first_name', 'last_name', 'email', 'username', 'password', 'confirm_password', 'is_staff',
                   'is_superuser']
 
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
 
-        # self.fields['staff_roles'].choices=[('1', 'Standard user'), ('2', 'Administrator')]
-
-        self.fields['checkboxselectmultiple'].choices = ((x.code, x.description) for x in Institution.objects.all())
+        # populating list of institutions
+        self.fields['checkbox_select_multiple'].choices = ((x.code, x.description) for x in Institution.objects.all())
 
         self.helper = FormHelper()
 
@@ -84,7 +83,9 @@ class UserCreateForm(ModelForm):
                     Field('email',
                           id='email',
                           data_parsley_trigger='change',
+                          # reference to container in template that will display error message
                           data_parsley_errors_container="#message-container",
+                          # message that will be displayed on error
                           data_parsley_error_message='The e-mail address entered is not valid',
                           ),
                     Field('username',
@@ -92,6 +93,7 @@ class UserCreateForm(ModelForm):
                           required=True,
                           autocomplete='off',
                           data_parsley_errors_container="#message-container",
+                          # message that will be displayed if required field is not entered
                           data_parsley_required_message='Please enter a username',
                           ),
                     Field('password',
@@ -119,6 +121,7 @@ class UserCreateForm(ModelForm):
                           help_text='',
                           data_parsley_errors_container="#message-container",
                           data_parsley_required_message='A role must be selected for the user',
+                          # group that this checkbox belongs to
                           data_parsley_multiple="user_roles",
                           ),
                     Field('is_superuser',
@@ -132,19 +135,21 @@ class UserCreateForm(ModelForm):
                 Tab(
                     'Institutions',
                     HTML('Please select the institutions the user belongs to'),
-                    Field('checkboxselectmultiple',
+                    Field('checkbox_select_multiple',
                           style="background: #FFFFFF; padding: 10px;",
-                          required=False,
+                          required=True,
                           data_parsley_errors_container="#message-container",
                           data_parsley_required_message='An institution must be selected',
+                          # message that will be displayed if minimum check condition is not met. %s is param passed
+                          # relating to value set in data_parsley_mincheck
+                          data_parsley_mincheck="1",
                           data_parsley_mincheck_message='At least %s institution must be selected',
-                          data_parsley_mincheck="1"
                           ),
                 ),
             ),
 
+            # define controls that handle form actions
             FormActions(
-
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
             )
