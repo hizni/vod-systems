@@ -6,7 +6,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button, Div, ButtonHolder
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
-from django.contrib.auth.forms import AuthenticationForm
 
 
 class LoginForm(forms.Form):
@@ -34,11 +33,12 @@ class UserCreateForm(ModelForm):
     # but the error text message does seem to get set here..... html5 error message?
     username = forms.CharField(help_text='')
     password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Password Check', help_text='Re-enter the '
-                                                                                                     'password..')
-
+    confirm_password = forms.CharField(widget=forms.PasswordInput,
+                                       label='Password Check',
+                                       help_text='Re-enter the password..')
     checkboxselectmultiple = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs={'style':'overflow : scroll; height:200'}),
-                                                       label='')
+                                                       label='Select institutions the user belongs to',
+                                                       required=True)
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username',
@@ -65,7 +65,7 @@ class UserCreateForm(ModelForm):
             # Other validation criteria then get applied if data is filled in.
             # See parsleyjs documentation: http://parsleyjs.org/doc/
             #   data_parsley_length="[minimum-value,maximum-value]"
-
+            # Div(id='message-container', css_class='validation-errors-container'),
             TabHolder(
                 Tab('User Details',
                     Field('first_name',
@@ -76,15 +76,21 @@ class UserCreateForm(ModelForm):
                           ),
                     Field('email',
                           id='email',
-                          data_parsley_trigger='change'
+                          data_parsley_trigger='change',
+                          data_parsley_errors_container="#message-container",
+                          data_parsley_error_message='USER DETAILS - Email address entered is not valid',
                           ),
                     Field('username',
                           id='username',
                           required=True,
-                          autocomplete='off'
+                          autocomplete='off',
+                          data_parsley_errors_container="#message-container",
+                          data_parsley_required_message='USER DETAILS - Please enter a username',
                           ),
                     Field('password',
                           id='password',
+                          data_parsley_errors_container="#message-container",
+                          data_parsley_required_message='USER DETAILS - Please enter a password',
                           required=True
                           ),
                     Field('confirm_password',
@@ -93,8 +99,9 @@ class UserCreateForm(ModelForm):
                           label="Password check:",
                           data_parsley_equalto="#password",
                           data_parsley_trigger='change',
-
-                          error_message="The passwords do not match."),
+                          data_parsley_errors_container="#message-container",
+                          data_parsley_required_message='USER DETAILS - Please confirm the password',
+                          data_parsley_error_message='USER DETAILS - Make sure that the password matches'),
                 ),
                 Tab('Roles',
                     Field('is_staff',
@@ -109,18 +116,18 @@ class UserCreateForm(ModelForm):
                 ),
                 Tab(
                     'Institutions',
-                    HTML('Select the institution(s) this user has permission to view data for: '),
-                    Div(
-                        Field('checkboxselectmultiple',
-                              id='user_insts',
-                              required=True,
-                              error_message="At least one Institution must be chosen"),
-                        style="height:500px;overflow-y:auto;",
+                    Field('checkboxselectmultiple',
+                          style="background: #FFFFFF; padding: 10px;",
+                          required=False,
+                          data_parsley_errors_container="#message-container",
+                          data_parsley_required_message='INSTITUTIONS - Select at least one institution'
+                          ),
 
-                    ),
                 ),
             ),
+
             FormActions(
+
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
             )
@@ -205,15 +212,12 @@ class UserDetailUpdateForm(ModelForm):
                 ),
                 Tab(
                     'User Institutions',
-                    HTML('Select the institution(s) this user has permission to view data for: '),
-                    Div(
-                        Field('checkboxselectmultiple',
-                              id='user_insts',
-                              required=True,
-                              error_message="At least one Institution must be chosen"),
-                        style="height:500px;overflow-y:auto;",
-
-                    ),
+                    Field('checkboxselectmultiple',
+                          id='user_insts',
+                          error_message="At least one Institution must be chosen",
+                          data_parsley_required ="true",
+                          data_parsley_trigger="click",
+                          data_parsley_mincheck="1"),
                 )
             ),
             FormActions(

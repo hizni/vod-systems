@@ -10,60 +10,108 @@
         </div>
         <div class="modal-body">
 
+            <div class="validation-errors-container panel panel-danger" role="alert" aria-labelledby="validation-errors-heading" aria-live="assertive">
+                <div class="validation-errors-container"></strong> Please correct the following errors...</div>
+              <div>
+                    <ul class="validation-errors-list"></ul>
+              </div>
+            </div>
+
             {% crispy form %}
         </div>
-        <!--
-        <div class="modal-footer" id="submit-div">
-            <span class="pull-right">
-                <button id="btnClose" class="btn btn-default">Close</button>
-                <input type='submit' id='btnFoo' class="btn btn-success" />
-            </span>
-        </div>
-        -->
-
     </div>
 </div><!-- /.modal-dialog -->
 
 
 <script>
 
+
     $(function () {
-      $('#form').parsley()
-        //.on('field:validated', function() {
 
-        //this.$element.css('background-color', 'red')
-        //this.$element.css('background-color', 'green')
-        //this.$element.css('background-color', '')
+        // 1. Configure Parsley for Bootstrap 3 Forms
+        window.ParsleyConfig = {
+          successClass: "has-success",
+          errorClass: "has-error",
+          classHandler: function(el) {
+            return el.$element.closest(".form-group");
+          },
+          errorsContainer: function(el) {
+            return el.$element.closest(".control");
+          },
+          errorsWrapper: "<span class='help-block parsley-messages'></span>",
+          errorTemplate: "<span></span>"
+        };
 
-        //var ok = $('.parsley-error').length === 0;
-        //$('.bs-callout-info').toggleClass('hidden', !ok);
-        //$('.bs-callout-warning').toggleClass('hidden', ok);
-      //})
+        //2. Parsleyfy the form
+        $('#form').parsley();
 
-      /*
-      .on('form:validate', function(formInstance){
-          var ok = formInstance.isValid();
+         // Convenience members
+
+        $.validationErrors = {
+
+            container: $('div.validation-errors-container'),
+            list: $('div.validation-errors-container ul.validation-errors-list'),
+
+            updateContainer: function() {
+              // Hide/show container if list is empty/full
+              $.validationErrors.container.toggleClass("filled", $.validationErrors.list.find("li:first").length > 0);
+            },
+
+            removeItem: function(sFieldName) {
+              // Remove related error messages from list
+              $.validationErrors.list.find('li[data-related-field-name="' + sFieldName + '"]').remove();
+            }
+
+        };
 
 
-      })
-      */
-      .on('form:submit', function(e) {
-          e.preventDefault();
-          var form = $(this);
-          form.parsley().validate();
-      });
+        // NB: Event names pertain to Parsley V2.0
+        // Before each validation, clear the validation-errors of the div
+        $.listen('parsley:form:validate', function() {
+            $.validationErrors.list.html();
+        });
+
+        // When a field has an error
+        $.listen('parsley:field:error', function(fieldInstance) {
+            var fieldName = fieldInstance.$element.attr('name');
+            $.validationErrors.removeItem(fieldName);
+
+            // Get the error messages
+            var messages = ParsleyUI.getErrorsMessages(fieldInstance);
+
+            // Loop through all the messages
+            for (var i in messages) {
+                // Create a message for each error
+                var fieldLabel = fieldInstance.$element.closest(".form-group").find("label:first");
+                var fieldLabelText = fieldLabel.clone().children().remove().end().text().trim();
+                var fieldName = fieldInstance.$element.attr("name");
+                //var $m = $('<li data-related-field-name="' + fieldName + '"><a data-related-field-name="' + fieldName + '" href="#na"><strong>' + fieldLabelText + '</strong> - ' + messages[i] + '</a></li>');
+                var $m = $('<li data-related-field-name="' + fieldName + '"><strong>' + fieldLabelText + '</strong> - ' + messages[i] + '</li>');
+                $.validationErrors.list.append($m);
+
+                //Suppress the parsley error message being displayed in the form body
+                var formBodyError = fieldInstance.$element.closest(".form-group").find("ul:first");
+                formBodyError.children().remove().end().text().trim();
+
+            }
+
+            $.validationErrors.updateContainer();
+        });
+
+        $.listen('parsley:field:success', function(fieldInstance) {
+            $.validationErrors.removeItem(fieldInstance.$element.attr('name'));
+            $.validationErrors.updateContainer();
+        });
+
+        // When there's a click on a error message from the div
+        $(document).on('click', 'a[data-related-field-name]', function() {
+
+            // take the field's name from the attribute
+            var name = $(this).attr('data-related-field-name');
+            $("[name=" + name + "]:first").focus();
+        });
     });
 
-    // experimented with adding footer buttons to table. Not using DataTables form submit buttons
-/*
-    $('#btnFoo').click(function() {
-        alert('submitting form!');
-         $('#form').submit();
-    });
 
-    $('#btnClose').click(function() {
-        $('#modal').modal('hide');
-    });
-*/
 </script>
 
