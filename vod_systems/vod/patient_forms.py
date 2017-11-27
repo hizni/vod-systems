@@ -132,14 +132,18 @@ class PatientCreateUpdateForm(ModelForm):
             TabHolder(
                 Tab(
                     'Patient Details',
+                    HTML('Please enter some details for a patient'),
                     Field('surname',
                           id='surname',
                           data_parsley_length="[0,255]",
-                          data_parsley_trigger='change'),
+                          data_parsley_trigger='change',
+                          data_parsley_errors_container="#message-container",
+                          ),
                     Field('first_name',
                           id='first_name',
                           data_parsley_length="[0,255]",
-                          data_parsley_trigger='change'
+                          data_parsley_trigger='change',
+                          data_parsley_errors_container="#message-container",
                           ),
                     Field('gender',
                           id='gender'
@@ -182,10 +186,6 @@ class PatientRetireForm(ModelForm):
 
         self.helper.layout = Layout(
             # Layout of crispy-forms
-            # Default: required = false
-            # Other validation criteria then get applied if data is filled in.
-            # See parsleyjs documentation: http://parsleyjs.org/doc/
-            #   data_parsley_length="[minimum-value,maximum-value]"
 
             HTML("Currently {{object.firstname}} {{object.surname}} has the following activity status: "),
             Field('is_active',

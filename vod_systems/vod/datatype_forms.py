@@ -27,26 +27,29 @@ class DatatypeCreateUpdateForm(ModelForm):
         self.helper.attrs = {'data-validate': 'parsley'}
         self.helper.layout = Layout(
             # Layout of crispy-forms
-            # Default: required = false
-            # Other validation criteria then get applied if data is filled in.
-            # See parsleyjs documentation: http://parsleyjs.org/doc/
-            #   data_parsley_length="[minimum-value,maximum-value]"
 
+            HTML('Enter details for a datatype'),
             Field('code',
                   id='code',
-                  required=True,
+                  data_parsley_required='true',
                   data_parsley_length="[0,100]",
-                  data_parsley_trigger='change'
+                  data_parsley_trigger='change',
+                  data_parsley_errors_container="#message-container",
+                  data_parsley_required_message='A code must be entered',
                   ),
             Field('description',
                   id='description',
+                  data_parsley_required='false',
                   data_parsley_length="[0,255]",
-                  data_parsley_trigger='change'
+                  data_parsley_trigger='change',
+                  data_parsley_errors_container="#message-container",
                   ),
             Field('unit',
                   id='unit',
+                  data_parsley_required='false',
                   data_parsley_length="[0,20]",
-                  data_parsley_trigger='change'
+                  data_parsley_trigger='change',
+                  data_parsley_errors_container="#message-container",
                   ),
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
@@ -75,11 +78,6 @@ class DatatypeRetireForm(ModelForm):
         self.helper.attrs = {'data-validate': 'parsley'}
 
         self.helper.layout = Layout(
-            # Layout of crispy-forms
-            # Default: required = false
-            # Other validation criteria then get applied if data is filled in.
-            # See parsleyjs documentation: http://parsleyjs.org/doc/
-            #   data_parsley_length="[minimum-value,maximum-value]"
 
             HTML("Currently {{object.description}} has the following activity status: "),
             Field('is_active',

@@ -27,21 +27,23 @@ class AliasIdCreateUpdateForm(ModelForm):
         self.helper.attrs = {'data-validate': 'parsley'}
         self.helper.layout = Layout(
             # Layout of crispy-forms
-            # Default: required = false
-            # Other validation criteria then get applied if data is filled in.
-            # See parsleyjs documentation: http://parsleyjs.org/doc/
-            #   data_parsley_length="[minimum-value,maximum-value]"
 
+            HTML('Enter details for an alias identifier'),
             Field('code',
                   id='code',
-                  required=True,
+                  data_parsley_required='true',
                   data_parsley_length="[0,20]",
-                  data_parsley_trigger='change'
+                  data_parsley_trigger='change',
+                  data_parsley_errors_container="#message-container",
+                  data_parsley_required_message='A code must be entered',
                   ),
             Field('description',
                   id='description',
+                  data_parsley_required='false',
                   data_parsley_length="[0,100]",
-                  data_parsley_trigger='change'
+                  data_parsley_trigger='change',
+                  data_parsley_errors_container="#message-container",
+                  data_parsley_required_message='A description must be entered',
                   ),
 
             FormActions(
