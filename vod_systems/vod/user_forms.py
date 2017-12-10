@@ -163,14 +163,16 @@ class UserDetailUpdateForm(ModelForm):
     # setting up properties of html components to do with the field and associated components
     # but the error text message does seem to get set here..... html5 error message?
     username = forms.CharField(help_text='')
-    checkboxselectmultiple = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(
-        attrs={'style': 'overflow : scroll; height:200'}),
-        label='')
+    checkbox_select_multiple = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(attrs={'style': 'overflow : scroll; height:200'}),
+        label='Institutions',
+        required=True)
+    is_staff = forms.BooleanField(label='Staff')
+    is_superuser = forms.BooleanField(label='Administrator')
 
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'is_staff', 'is_superuser']
-        # fields = ['username', 'password', 'confirm_password']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -185,15 +187,11 @@ class UserDetailUpdateForm(ModelForm):
 
         super(UserDetailUpdateForm, self).__init__(*args, **kwargs)
 
-        # get empty list of institutions
-        insts = Institution.objects.all()
-        user_chosen_inst = User_Institution.objects.values_list('fk_institution_id', flat=True).filter(
-            fk_user_id=self.instance.id)
+        # gets the all available institutions for this user
+        self.fields['checkbox_select_multiple'].choices = ((x.id, x.description) for x in Institution.objects.all())
 
-        # gets the avaialble institutions
-        self.fields['checkboxselectmultiple'].choices = ((x.id, x.description) for x in insts)
-        # ticks the chosen institutions for this user
-        self.fields['checkboxselectmultiple'].initial = list(user_chosen_inst)
+        # get list of institutions selected for this user
+        self.fields['checkbox_select_multiple'].initial =User_Institution.objects.values_list('fk_institution_id', flat=True).filter(fk_user_id=self.instance.id)
 
         self.helper.layout = Layout(
             # Layout of crispy-forms
@@ -229,8 +227,7 @@ class UserDetailUpdateForm(ModelForm):
                           data_parsley_required_message='Please enter a username',
                           ),
                 ),
-                Tab(
-                    'User Roles',
+                Tab('Roles',
                     HTML('Please select a role for the user'),
                     Field('is_staff',
                           id='is_staff',
@@ -248,21 +245,21 @@ class UserDetailUpdateForm(ModelForm):
                           data_parsley_required_message='A role must be selected for the user',
                           data_parsley_multiple="user_roles",
                           ),
-                ),
+                    ),
                 Tab(
                     'User Institutions',
 
                     HTML('Please select the institutions the user belongs to'),
                     Field('checkbox_select_multiple',
-                          style="background: #FFFFFF; padding: 10px;",
-                          required=True,
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='An institution must be selected',
-                          # message that will be displayed if minimum check condition is not met. %s is param passed
-                          # relating to value set in data_parsley_mincheck
-                          data_parsley_mincheck="1",
-                          data_parsley_mincheck_message='At least %s institution must be selected',
-                          ),
+                        style="background: #FFFFFF; padding: 10px;",
+                        required=True,
+                        data_parsley_errors_container="#message-container",
+                        data_parsley_required_message='An institution must be selected',
+                        # message that will be displayed if minimum check condition is not met. %s is param passed
+                        # relating to value set in data_parsley_mincheck
+                        data_parsley_mincheck="1",
+                        data_parsley_mincheck_message='At least %s institution must be selected',
+                    ),
                 )
             ),
             FormActions(
