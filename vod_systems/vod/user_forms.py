@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from models import Institution, User_Institution
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Submit, HTML, Button, ButtonHolder, Div
+from crispy_forms.layout import Layout, Field, MultiField, Submit, HTML, Button, ButtonHolder, Div
 from crispy_forms.bootstrap import FormActions, TabHolder, Tab
 from django.core.urlresolvers import reverse
 
@@ -38,8 +38,8 @@ class UserCreateForm(ModelForm):
         widget=forms.CheckboxSelectMultiple(attrs={'style': 'overflow : scroll; height:200'}),
         label='Institutions',
         required=True)
-    is_staff = forms.BooleanField(label='Staff')
-    is_superuser = forms.BooleanField(label='Administrator')
+    is_staff = forms.BooleanField(label='Staff', required=False)
+    is_superuser = forms.BooleanField(label='Administrator', required=False)
 
     class Meta:
         # model being referenced
@@ -71,82 +71,76 @@ class UserCreateForm(ModelForm):
             # See parsleyjs documentation: http://parsleyjs.org/doc/
             #   data_parsley_length="[minimum-value,maximum-value]"
             # Div(id='message-container', css_class='validation-errors-container'),
-            TabHolder(
-                Tab('User Details',
-                    HTML('Please add some details about the user'),
-                    Field('first_name',
-                          id='first_name'
-                          ),
-                    Field('last_name',
-                          id='last_name'
-                          ),
-                    Field('email',
-                          id='email',
-                          data_parsley_trigger='change',
-                          # reference to container in template that will display error message
-                          data_parsley_errors_container="#message-container",
-                          # message that will be displayed on error
-                          data_parsley_error_message='The e-mail address entered is not valid',
-                          ),
-                    Field('username',
-                          id='username',
-                          required=True,
-                          autocomplete='off',
-                          data_parsley_errors_container="#message-container",
-                          # message that will be displayed if required field is not entered
-                          data_parsley_required_message='A username must be entered',
-                          ),
-                    Field('password',
-                          id='password',
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='A password must be entered',
-                          required=True
-                          ),
-                    Field('confirm_password',
-                          id="confirm_password",
-                          required=True,
-                          label="Password check:",
-                          data_parsley_equalto="#password",
-                          data_parsley_trigger='change',
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='Re-confirm the password',
-                          data_parsley_error_message='Make sure that the password matches'
-                          ),
-                    ),
-                Tab('Roles',
-                    HTML('Please select a role for the user'),
-                    Field('is_staff',
-                          id='is_staff',
-                          required=True,
-                          help_text='',
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='A role must be selected for the user',
-                          # group that this checkbox belongs to
-                          data_parsley_multiple="user_roles",
-                          ),
-                    Field('is_superuser',
-                          id='is_superuser',
-                          help_text='',
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='A role must be selected for the user',
-                          data_parsley_multiple="user_roles",
-                          ),
-                    ),
-                Tab(
-                    'Institutions',
-                    HTML('Please select the institutions the user belongs to'),
-                    Field('checkbox_select_multiple',
-                          style="background: #FFFFFF; padding: 10px;",
-                          required=True,
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='An institution must be selected',
-                          # message that will be displayed if minimum check condition is not met. %s is param passed
-                          # relating to value set in data_parsley_mincheck
-                          data_parsley_mincheck="1",
-                          data_parsley_mincheck_message='At least %s institution must be selected',
-                          ),
-                ),
-            ),
+
+                HTML('Please add some details about the user'),
+                Field('first_name',
+                      id='first_name'
+                      ),
+                Field('last_name',
+                      id='last_name'
+                      ),
+                Field('email',
+                      id='email',
+                      data_parsley_trigger='change',
+                      # reference to container in template that will display error message
+                      data_parsley_errors_container="#message-container",
+                      # message that will be displayed on error
+                      data_parsley_error_message='The e-mail address entered is not valid',
+                      ),
+                Field('username',
+                      id='username',
+                      # required=True,
+                      autocomplete='off',
+
+                      # data_parsley_ui_enabled=False,
+                      data_parsley_errors_container="#message-container",
+                      # data_parsley_userexist="",
+                      data_parsley_userexist="",
+                      data_parsley_trigger='change',
+                      # message that will be displayed if required field is not entered
+                      data_parsley_required_message='A username must be entered',
+                      ),
+                Field('password',
+                      id='password',
+                      data_parsley_errors_container="#message-container",
+                      data_parsley_required_message='A password must be entered',
+                      required=True,
+                      data_parsley_trigger='change',
+                      ),
+                Field('confirm_password',
+                      id="confirm_password",
+                      required=True,
+                      label="Password check:",
+                      data_parsley_equalto="#password",
+                      data_parsley_trigger='change',
+                      data_parsley_errors_container="#message-container",
+                      data_parsley_required_message='Re-confirm the password',
+                      data_parsley_error_message='Make sure that the password matches'
+                      ),
+
+                HTML('Please select a role for the user'),
+                Field('is_staff',
+                      id='is_staff',
+                      checked=True,
+                      required=True,
+                      data_parsley_required_message='User have at least the staff role selected',
+                      data_parsley_errors_container="#message-container",
+                      ),
+                Field('is_superuser',
+                      id='is_superuser',
+                      ),
+
+                HTML('Please select the institutions the user belongs to'),
+                Field('checkbox_select_multiple',
+                      style="background: #FFFFFF; padding: 10px;",
+                      required=True,
+                      data_parsley_errors_container="#message-container",
+                      data_parsley_required_message='An institution must be selected',
+                      # message that will be displayed if minimum check condition is not met. %s is param passed
+                      # relating to value set in data_parsley_mincheck
+                      data_parsley_mincheck="1",
+                      data_parsley_mincheck_message='At least %s institution must be selected',
+                      ),
 
             # define controls that handle form actions
             FormActions(
@@ -168,7 +162,7 @@ class UserDetailUpdateForm(ModelForm):
         label='Institutions',
         required=True)
     is_staff = forms.BooleanField(label='Staff')
-    is_superuser = forms.BooleanField(label='Administrator')
+    is_superuser = forms.BooleanField(label='Administrator', required=False)
 
     class Meta:
         model = User
@@ -191,7 +185,7 @@ class UserDetailUpdateForm(ModelForm):
         self.fields['checkbox_select_multiple'].choices = ((x.id, x.description) for x in Institution.objects.all())
 
         # get list of institutions selected for this user
-        self.fields['checkbox_select_multiple'].initial =User_Institution.objects.values_list('fk_institution_id', flat=True).filter(fk_user_id=self.instance.id)
+        self.fields['checkbox_select_multiple'].initial = User_Institution.objects.values_list('fk_institution_id', flat=True).filter(fk_user_id=self.instance.id)
 
         self.helper.layout = Layout(
             # Layout of crispy-forms
@@ -200,68 +194,51 @@ class UserDetailUpdateForm(ModelForm):
             # See parsleyjs documentation: http://parsleyjs.org/doc/
             #   data_parsley_length="[minimum-value,maximum-value]"
 
-            TabHolder(
-                Tab(
-                    'User Details',
-                    HTML('Please add some details about the user'),
-                    Field('first_name',
-                          id='first_name'
-                          ),
-                    Field('last_name',
-                          id='last_name'
-                          ),
-                    Field('email',
-                          id='email',
-                          data_parsley_trigger='change',
-                          # reference to container in template that will display error message
-                          data_parsley_errors_container="#message-container",
-                          # message that will be displayed on error
-                          data_parsley_error_message='The e-mail address entered is not valid',
-                          ),
-                    Field('username',
-                          id='username',
-                          required=True,
-                          autocomplete='off',
-                          data_parsley_errors_container="#message-container",
-                          # message that will be displayed if required field is not entered
-                          data_parsley_required_message='Please enter a username',
-                          ),
-                ),
-                Tab('Roles',
-                    HTML('Please select a role for the user'),
-                    Field('is_staff',
-                          id='is_staff',
-                          required=True,
-                          help_text='',
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='A role must be selected for the user',
-                          # group that this checkbox belongs to
-                          data_parsley_multiple="user_roles",
-                          ),
-                    Field('is_superuser',
-                          id='is_superuser',
-                          help_text='',
-                          data_parsley_errors_container="#message-container",
-                          data_parsley_required_message='A role must be selected for the user',
-                          data_parsley_multiple="user_roles",
-                          ),
-                    ),
-                Tab(
-                    'User Institutions',
 
-                    HTML('Please select the institutions the user belongs to'),
-                    Field('checkbox_select_multiple',
-                        style="background: #FFFFFF; padding: 10px;",
-                        required=True,
-                        data_parsley_errors_container="#message-container",
-                        data_parsley_required_message='An institution must be selected',
-                        # message that will be displayed if minimum check condition is not met. %s is param passed
-                        # relating to value set in data_parsley_mincheck
-                        data_parsley_mincheck="1",
-                        data_parsley_mincheck_message='At least %s institution must be selected',
-                    ),
-                )
-            ),
+            HTML('Please add some details about the user'),
+            Field('first_name',
+                  id='first_name'
+                  ),
+            Field('last_name',
+                  id='last_name'
+                  ),
+            Field('email',
+                  id='email',
+                  data_parsley_trigger='change',
+                  # reference to container in template that will display error message
+                  data_parsley_errors_container="#message-container",
+                  # message that will be displayed on error
+                  data_parsley_error_message='The e-mail address entered is not valid',
+                  ),
+            Field('username',
+                  id='username',
+                  readonly=True,
+                  ),
+
+            HTML('Please select a role for the user'),
+            Field('is_staff',
+                  id='is_staff',
+                  checked=True,
+                  required=True,
+                  data_parsley_required_message='User have at least the staff role selected',
+                  data_parsley_errors_container="#message-container",
+                  ),
+            Field('is_superuser',
+                  id='is_superuser',
+                  ),
+
+            HTML('Please select the institutions the user belongs to'),
+            Field('checkbox_select_multiple',
+                  style="background: #FFFFFF; padding: 10px;",
+                  required=True,
+                  data_parsley_errors_container="#message-container",
+                  data_parsley_required_message='An institution must be selected',
+                  # message that will be displayed if minimum check condition is not met. %s is param passed
+                  # relating to value set in data_parsley_mincheck
+                  data_parsley_mincheck="1",
+                  data_parsley_mincheck_message='At least %s institution must be selected',
+                  ),
+
             FormActions(
                 Submit('save_changes', 'Save changes', css_class="btn-primary"),
                 Button('cancel', "Cancel", css_class='btn', onclick="$('#modal').modal('hide');"),
