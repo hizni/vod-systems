@@ -8,12 +8,7 @@ GENDER_CHOICES = (
     ('U', 'Unknown'),
 )
 
-UPLOAD_PROCESSING = (
-    ('U', 'Uploaded'),
-    ('C', 'Cleaned'),
-    ('E', 'Errored'),
-    ('N', 'Null'),
-)
+
 
 # metadata - models hold meta data that is used to describe data held in primary tables
 
@@ -81,10 +76,10 @@ class Patient_Transplant(models.Model):
 class Upload_History(models.Model):
     filename = models.CharField(max_length=255)
     outcome = models.CharField(max_length=255)
-    rows_uploaded  = models.IntegerField()
-    row_cleaned = models.IntegerField()
-    rows_errored = models.IntegerField()
-    upload_date = models.DateTimeField()
+    rows_uploaded  = models.IntegerField(default=0)
+    row_cleaned = models.IntegerField(default=0)
+    rows_errored = models.IntegerField(default=0)
+    upload_date = models.DateTimeField(default=0)
     uploaded_by = models.CharField(max_length=255)
 
 
@@ -98,6 +93,18 @@ class Clean_Uploaded_Data(models.Model):
 
 
 class Raw_Uploaded_Data(models.Model):
+    R = 'R'
+    C = 'C'
+    E = 'E'
+    N = 'N'
+    UPLOAD_PROCESSING = (
+        (R, 'Raw'),
+        (C, 'Cleaned'),
+        (E, 'Errored'),
+        (N, 'Null'),
+    )
+
+    fk_upload_history = models.ForeignKey(Upload_History)
     fk_pt_institutional_id = models.CharField(max_length=100)
     fk_pt_department_id = models.CharField(max_length=100)
     fk_pt_identifier_type = models.CharField(max_length=50)
@@ -112,7 +119,7 @@ class Raw_Uploaded_Data(models.Model):
     fk_data_type = models.CharField(max_length=100)
     data_value = models.FloatField()
     data_date = models.DateTimeField()
-    upload_processing = models.CharField(max_length=5, choices=UPLOAD_PROCESSING)
+    upload_processing = models.CharField(max_length=10, choices=UPLOAD_PROCESSING)
 
 
 

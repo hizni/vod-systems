@@ -27,7 +27,7 @@ class DataTypeListView(ListView):
 
 class DataTypeCreateView(CreateView):
     form_class = parsleyfy(DatatypeCreateUpdateForm)
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Create new data type'
 
     def form_valid(self, form):
@@ -42,7 +42,7 @@ class DataTypeUpdateView(UpdateView):
 
     form_class = parsleyfy(DatatypeCreateUpdateForm)
     model = Datatype
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Update existing data type'
     selected_pk = 0
 
@@ -66,7 +66,7 @@ class DataTypeUpdateView(UpdateView):
 class DataTypeRetireView(UpdateView):
     form_class = parsleyfy(DatatypeRetireForm)
     model = Datatype
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Data type active status'
     selected_pk = 0
 

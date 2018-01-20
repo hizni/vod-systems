@@ -26,3 +26,5 @@ vod_systems/bower_components/parsleyjs/bower_components/jquery/src/
 vod_systems/bower_components/parsleyjs/
 
 vod_systems/data_uploaded/
+
+vod_systems/vod/migrations/

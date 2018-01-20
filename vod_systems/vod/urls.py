@@ -13,7 +13,7 @@ from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateV
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.upload_views import UploadListView
 from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView, LoginView
-
+from vod import helper_views
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -59,6 +59,9 @@ urlpatterns = [
     url(r'^patient/create-transplant/(?P<id>\d+)/$', login_required(PatientTransplantCreateView.as_view()), name='patient-create-transplant'),
 
     url(r'^patient/detail/(?P<id>\d+)/$', login_required(PatientIdentifiersDetailView.as_view()), name='patient-detail'),
+
+    # route to helper views
+    url(r'^ajax/validate_username/$', helper_views.validate_username, name='validate_username'),
 ]
 
 if settings.DEBUG:

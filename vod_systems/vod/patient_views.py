@@ -55,7 +55,7 @@ class PatientIdentifiersDetailView(DetailView):
 
 class PatientAliasCreateView(CreateView):
     form_class = parsleyfy(PatientAliasCreateForm)
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Create patient alias'
 
     def get_form_kwargs(self):
@@ -81,7 +81,7 @@ class PatientAliasCreateView(CreateView):
 
 class PatientTransplantCreateView(CreateView):
     form_class = parsleyfy(PatientTransplantCreateForm)
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Create new transplant'
 
     def get_form_kwargs(self):
@@ -106,7 +106,7 @@ class PatientTransplantCreateView(CreateView):
 
 class PatientCreateView(CreateView):
     form_class = parsleyfy(PatientCreateUpdateForm)
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Create new patient'
 
     def get_form(self, form_class):
@@ -127,7 +127,7 @@ class PatientUpdateView(UpdateView):
 
     form_class = parsleyfy(PatientCreateUpdateForm)
     model = Patient
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Update existing patient'
     selected_pk = 0
 
@@ -151,7 +151,7 @@ class PatientUpdateView(UpdateView):
 class PatientRetireView(UpdateView):
     form_class = parsleyfy(PatientRetireForm)
     model = Patient
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Patient active status'
     selected_pk = 0
 
