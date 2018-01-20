@@ -40,6 +40,9 @@
     <div id="root" class="container">
         {% block header %} {% endblock %}
         {% block content %} {% endblock %}
+
+        {% block generic-scripts %} {% endblock %}      <!-- generic Javascript that applies to all forms -->
+        {% block specialised-scripts %} {% endblock %}  <!-- specialised Javascript that applies to a specific form -->
         {% block footer %} {% endblock %}
     </div>
 </body>

@@ -1,30 +1,25 @@
+{% extends './vod/vod-base.html' %}
 {% load crispy_forms_tags %}
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-                <span class="sr-only">Close</span>
-            </button>
-            <h4 class="modal-title">{{ view.view_title }}</h4>
-        </div>
-        <div class="modal-body">
 
-            <div class="validation-errors-container panel panel-danger" role="alert" aria-labelledby="validation-errors-heading" aria-live="assertive">
-                <div class="validation-errors-container"></strong> Please correct the following errors...</div>
-              <div>
-                    <ul class="validation-errors-list"></ul>
-              </div>
-            </div>
-
-            {% crispy form %}
+{% block main-content %}
+<div class="panel panel-default">
+    <div class="panel-heading">{ view_title }</div>
+    <div class="panel-body">
+        <div class="validation-errors-container panel panel-danger" role="alert" aria-labelledby="validation-errors-heading" aria-live="assertive">
+            <div class="validation-errors-container"></strong> Please correct the following errors...</div>
+          <div>
+                <ul class="validation-errors-list"></ul>
+          </div>
         </div>
+
+        <!-- main window content will be displayed here -->
+        {% crispy form %}
     </div>
-</div><!-- /.modal-dialog -->
+</div>
+{% endblock %}
 
-
+{% block generic-scripts %}
 <script>
-
 
     $(function () {
 
@@ -45,8 +40,7 @@
         //2. Parsleyfy the form
         $('#form').parsley();
 
-         // Convenience members
-
+        // Validation Convenience members
         $.validationErrors = {
 
             container: $('div.validation-errors-container'),
@@ -60,11 +54,11 @@
             removeItem: function(sFieldName) {
               // Remove related error messages from list
               $.validationErrors.list.find('li[data-related-field-name="' + sFieldName + '"]').remove();
-            }
+            },
 
         };
 
-
+        // ===== Handling the displaying code Error Messages =====
         // NB: Event names pertain to Parsley V2.0
         // Before each validation, clear the validation-errors of the div
         $.listen('parsley:form:validate', function() {
@@ -76,23 +70,23 @@
             var fieldName = fieldInstance.$element.attr('name');
             $.validationErrors.removeItem(fieldName);
 
-            // Get the error messages
+            // Get the error messages in a iteratable data structure
             var messages = ParsleyUI.getErrorsMessages(fieldInstance);
 
             // Loop through all the messages
             for (var i in messages) {
-                // Create a message for each error
+                // Create a variable for each error message
                 var fieldLabel = fieldInstance.$element.closest(".form-group").find("label:first");
-                var fieldLabelText = fieldLabel.clone().children().remove().end().text().trim();
+                //var fieldLabelText = fieldLabel.clone().children().remove().end().text().trim();
                 var fieldName = fieldInstance.$element.attr("name");
-                //var $m = $('<li data-related-field-name="' + fieldName + '"><a data-related-field-name="' + fieldName + '" href="#na"><strong>' + fieldLabelText + '</strong> - ' + messages[i] + '</a></li>');
+
                 var $m = $('<li data-related-field-name="' + fieldName + '">' + messages[i] + '</li>');
                 $.validationErrors.list.append($m);
+
 
                 //Suppress the parsley error message being displayed in the form body
                 var formBodyError = fieldInstance.$element.closest(".form-group").find("ul:first");
                 formBodyError.children().remove().end().text().trim();
-
             }
 
             $.validationErrors.updateContainer();
@@ -103,15 +97,9 @@
             $.validationErrors.updateContainer();
         });
 
-        // When there's a click on a error message from the div
-        //$(document).on('click', 'a[data-related-field-name]', function() {
-
-            // take the field's name from the attribute
-         //   var name = $(this).attr('data-related-field-name');
-         //   $("[name=" + name + "]:first").focus();
-        //});
     });
-
-
 </script>
+{% endblock %}
+
+
 

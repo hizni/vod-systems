@@ -1,0 +1,33 @@
+{% extends './common/form-template.html' %}
+
+{% block specialised-scripts %}
+<script>
+        // promise - check if username already exists
+        $("#username").change(function () {
+            var username = $(this).val();
+
+            $.ajax({
+                url: '/vod/ajax/validate_username/',
+                data: {
+                  'username': username
+                },
+                dataType: 'json',
+                success: function (data) {
+                  if (data.is_taken) {
+                    //alert("A user with this username already exists.");
+
+                    var item = $.validationErrors.list.find('li[data-related-field-name="username"]');
+                    if (item.length === 0){
+                        var m = $('<li data-related-field-name="username"> A user with this username already exists. </li>');
+                        $.validationErrors.list.append(m);
+                    }
+                  }
+                  else{
+                      $.validationErrors.removeItem('username');
+                  }
+                  $.validationErrors.updateContainer();
+                }
+            });
+        });
+</script>
+{% endblock %}
