@@ -26,7 +26,7 @@ class InstitutionListView(ListView):
 
 class InstitutionCreateView(CreateView):
     form_class = parsleyfy(InstitutionCreateUpdateForm)
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Create new institution'
 
     def form_valid(self, form):
@@ -41,7 +41,7 @@ class InstitutionUpdateView(UpdateView):
 
     form_class = parsleyfy(InstitutionCreateUpdateForm)
     model = Institution
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Update existing institution'
     selected_pk = 0
 
@@ -65,7 +65,7 @@ class InstitutionUpdateView(UpdateView):
 class InstitutionRetireView(UpdateView):
     form_class = parsleyfy(InstitutionRetireForm)
     model = Institution
-    template_name = '../templates/common/generic-modal.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'Institution active status'
     selected_pk = 0
 

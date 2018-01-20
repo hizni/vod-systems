@@ -81,7 +81,9 @@ class UserListView(ListView):
 
 class UserCreateView(CreateView):
     form_class = parsleyfy(UserCreateForm)
-    template_name = '../templates/common/generic-modal.html'
+    # template_name = '../templates/common/modal-template.html'
+    # template_name = '../templates/common/user-form-template.html'
+    template_name = '../templates/vod/admin/user-modal-template.html'
     view_title = 'Create new user'
 
     def form_valid(self, form):
@@ -90,7 +92,7 @@ class UserCreateView(CreateView):
         user.set_password(user.password)
         user.save()
 
-        for i in form.cleaned_data['checkboxselectmultiple']:
+        for i in form.cleaned_data['checkbox_select_multiple']:
             user_inst = User_Institution()
             user_inst.fk_user_id = user
             user_inst.fk_institution_id = Institution.objects.get(code=i)
@@ -110,7 +112,10 @@ class UserUpdateView(UpdateView):
 
     form_class = parsleyfy(UserDetailUpdateForm)
     model = User
-    template_name = '../templates/common/generic-modal.html'
+    # template_name = '../templates/common/form-template.html'
+    # template_name = '../templates/common/user-form-template.html'
+    template_name = '../templates/vod/admin/user-modal-template.html'
+
     view_title = 'Update existing user'
     selected_pk = 0
 
@@ -133,7 +138,7 @@ class UserUpdateView(UpdateView):
         user_chosen_inst.delete()
 
         # adding user - institution relationship
-        for i in form.cleaned_data['checkboxselectmultiple']:
+        for i in form.cleaned_data['checkbox_select_multiple']:
             user_inst = User_Institution()
             user_inst.fk_user_id = user
             user_inst.fk_institution_id = Institution.objects.get(id=i)
@@ -149,7 +154,9 @@ class UserUpdateView(UpdateView):
 class UserRetireView(UpdateView):
     form_class = parsleyfy(UserRetireForm)
     model = User
-    template_name = '../templates/common/generic-modal.html'
+    # template_name = '../templates/common/form-template.html'
+    # template_name = '../templates/common/user-form-template.html'
+    template_name = '../templates/common/modal-template.html'
     view_title = 'User active status'
     selected_pk = 0
 
