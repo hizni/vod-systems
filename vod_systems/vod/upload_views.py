@@ -108,33 +108,34 @@ class UploadListView(ListView):
         # iterate over each row read in from the uploaded file
         for record in dict_data:
 
-            # create a Patient_Transplant object
-            #try:
-                account = Raw_Uploaded_Data(
-                    fk_upload_history_id=upload_identifier,
-                    fk_pt_institutional_id=record['fk_pt_institutional_id'],
-                    fk_pt_department_id=record['fk_pt_department_id'],
-                    fk_pt_identifier_type=record['fk_pt_identifier_type'],
-                    fk_pt_identifier_type_value=record['fk_pt_identifier_type_value'],
-                    fk_transplant_number=record['fk_transplant_number'],
-                    fk_transplant_type=record['fk_transplant_type'],
-                    fk_transplant_day_zero=record['fk_transplant_day_zero'],
-                    fk_transplant_start_weight_data_type=record['fk_pt_department_id'],
-                    fk_transplant_start_weight=record['fk_transplant_start_weight'],
-                    fk_transplant_start_renal_function_data_type=record['fk_transplant_start_renal_function_data_type'],
-                    fk_transplant_start_renal_function=record['fk_transplant_start_renal_function'],
-                    fk_data_type=record['fk_data_type'],
-                    data_value=record['data_value'],
-                    data_date=record['data_date'],
-                    #upload_processing=Raw_Uploaded_Data.UPLOAD_PROCESSING.R
-                )
+            # instantiate
+            account = Raw_Uploaded_Data()
 
-                # add it to a list of items
-                list_data.append(account)
+            # populate the Raw_Uploaded_Data object
+            try:
+                account.fk_upload_history_id=upload_identifier
+                account.fk_pt_institutional_id=record['fk_pt_institutional_id']
+                account.fk_pt_department_id=record['fk_pt_department_id']
+                account.fk_pt_identifier_type=record['fk_pt_identifier_type']
+                account.fk_pt_identifier_type_value=record['fk_pt_identifier_type_value']
+                account.fk_transplant_number=record['fk_transplant_number']
+                account.fk_transplant_type=record['fk_transplant_type']
+                account.fk_transplant_day_zero=record['fk_transplant_day_zero']
+                account.fk_transplant_start_weight_data_type=record['fk_pt_department_id']
+                account.fk_transplant_start_weight=record['fk_transplant_start_weight']
+                account.fk_transplant_start_renal_function_data_type=record['fk_transplant_start_renal_function_data_type'],
+                account.fk_transplant_start_renal_function=record['fk_transplant_start_renal_function']
+                account.fk_data_type=record['fk_data_type']
+                account.data_value=record['data_value']
+                account.data_date=record['data_date']
+                account.upload_processing = 'R'
 
-            #except Exception:
-                #upload_processing = Raw_Uploaded_Data.UPLOAD_PROCESSING.E
-                #pass
+            except Exception:
+                account.upload_processing = 'E'
+                pass
+
+            # add it to a list of items
+            list_data.append(account)
 
         if list_data:
             # bulk_create will create multiple objects in a single query from the contents of the list_data list

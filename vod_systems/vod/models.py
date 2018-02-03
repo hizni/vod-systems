@@ -119,7 +119,7 @@ class Raw_Uploaded_Data(models.Model):
     fk_data_type = models.CharField(max_length=100)
     data_value = models.FloatField()
     data_date = models.DateTimeField()
-    upload_processing = models.CharField(max_length=10, choices=UPLOAD_PROCESSING)
+    upload_processing = models.CharField(max_length=10)
 
 
 
