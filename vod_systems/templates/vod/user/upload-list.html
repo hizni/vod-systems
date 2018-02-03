@@ -39,6 +39,7 @@
                     <th>Upload Date</th>
                     <th>Outcome</th>
                     <th>Uploaded By</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,10 @@
                         <td>{{ i.upload_date }}</td>
                         <td>{{ i.outcome }}</td>
                         <td>{{ i.uploaded_by }}</td>
+                        <td>
+                            <a class="btn btn-info btn-xs" href="{% url 'data-complete' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-list"/></a>
+                            <a class="btn btn-danger btn-xs" href="{% url 'data-valid' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-check"/></a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
