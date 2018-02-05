@@ -1,0 +1,166 @@
+{% extends './vod/vod-base.html' %}
+
+{% block main-content %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">Select Data File </div>
+    <div class="panel-body">
+        <p>
+            Select a VOD data file to produce a skeleton data cleaning template that you will need to flesh out
+        </p>
+         <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+             <select id ="selectInst" name="selectInst">
+                {% if user_institutions_list|length > 1 %}
+                    <option value="all">Show all...</option>
+                {% endif %}
+                {% for i in user_institutions_list %}
+                    <option value="{{ i.fk_institution_id.id }}">{{ i.fk_institution_id.description }}</option>
+                {% endfor %}
+            </select>
+            <br/><br/>
+             <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Select data file&hellip; <input type="file" name="myfile" style="display: none;">
+                    </span>
+                </label>
+                <input class="form-control" readonly>
+            </div>
+             <br>
+             <div class="pull-right">
+                 <button id="btnGoUpload" class="btn btn-success" type="submit">Upload Data</button>
+             </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Data Cleansing Templates
+        <div class="pull-right">
+            <button id="btnAdd" class="btn btn-success btn-xs disabled" type="submit" href="{% url 'cleansing-profile-create' %}" data-toggle="modal" data-target="#modal">Add</button>
+        </div>
+    </div>
+
+    <div class="panel-body">
+            <!-- main window content will be displayed here -->
+            <table id="example" class="display compact" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Data Cleansing ID</th>
+                    <th>Institution ID</th>
+                    <th>Profile Name</th>
+                    <th>Added By</th>
+                    <th>Added On</th>
+                    <th>Is Active</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for i in object_list %}
+                    <tr>
+                        <td>{{ i.id }}</td>
+                        <td>{{ i.fk_pt_institutional_id.code }}</td>
+                        <td>{{ i.profile_name }}</td>
+                        <td>{{ i.added_by }}</td>
+                        <td>{{ i.added_date }}</td>
+                        <td>{{ i.is_active }}</td>
+                        <td>
+                            <button id="btnConfig" class="btn btn-info btn-xs" type="submit">Config</button>
+                            <button id="btnDelete" class="btn btn-danger btn-xs" type="submit">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="modal fade" id="modal"></div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Data Cleansing Templates Fields</div>
+
+    <div class="panel-body">
+            <!-- main window content will be displayed here -->
+            <table id="example" class="display compact" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Template ID</th>
+                    <th>Column</th>
+                    <th>Description (headimg)</th>
+                    <th>Is nullable</th>
+                    <th>Domain</th>
+                    <th>Domain constraint</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <div class="modal fade" id="modal"></div>
+    </div>
+</div>
+
+<script>
+
+var table;
+$(document).ready(function() {
+    $('#btnGoUpload').attr('disabled', true);
+    table = $('#example').DataTable({
+        "bFilter": false,  // switch of search functionality
+    });
+} );
+
+//script that handles the viewing of the modal CBVs
+$('#modal').on('show.bs.modal', function (event) {
+    var modal = $(this)
+    $.ajax({
+        url: $(event.relatedTarget).attr('href'),
+        context: document.body
+    }).done(function(response) {
+        modal.html(response);
+        $(this).removeData('bs.modal');
+    });
+});
+
+// functions that are used for file selection
+// We can attach the `fileselect` event to all file inputs on the page
+$(document).on('change', ':file', function() {
+var input = $(this),
+    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+    input.trigger('fileselect', [numFiles, label]);
+});
+
+// We can watch for our custom fileselect event like this
+$(document).ready( function() {
+  $(':file').on('fileselect', function(event, numFiles, label) {
+
+      var input = $(this).parents('.input-group').find(':text'),
+          log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+      if (numFiles == 0){
+          $('#btnGoUpload').attr('disabled', true);
+          input.val(log);
+      }
+      else {
+          if( input.length ) {
+            input.val(log);
+            $('#btnGoUpload').attr('disabled', false);
+          } else {
+          $('#btnGoUpload').attr('disabled', true);
+            if( log ) {
+                alert(log);
+                input.val(log);
+            }
+          }
+      }
+  });
+});
+
+</script>
+{% endblock %}

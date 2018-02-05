@@ -44,8 +44,8 @@ class User_Institution(models.Model):
     fk_user_id = models.ForeignKey(User, related_name='institution_belongs_to')
     fk_institution_id = models.ForeignKey(Institution)
 
-# primary data
 
+# primary data
 
 class Patient(models.Model):
     surname = models.CharField(max_length=255)
@@ -121,6 +121,21 @@ class Raw_Uploaded_Data(models.Model):
     data_date = models.DateTimeField()
     upload_processing = models.CharField(max_length=10)
 
+
+class Data_Cleansing_Template(models.Model):
+    fk_pt_institutional_id = models.ForeignKey(Institution)
+    profile_name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    added_by = models.CharField(max_length=255)
+    added_date = models.DateTimeField(default=0)
+
+
+class Data_Cleansing_Template_Field(models.Model):
+    fk_cleansing_template_id = models.ForeignKey(Data_Cleansing_Template)
+    column_position = models.IntegerField()
+    description = models.CharField(max_length=100)
+    domain_referenced = models.CharField(max_length=100, null=True)
+    is_nullable = models.BooleanField(default=True)
 
 
 

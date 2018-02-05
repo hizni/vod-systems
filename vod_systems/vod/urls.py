@@ -12,6 +12,7 @@ from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateV
     PatientIdentifiersDetailView, PatientAliasCreateView, PatientTransplantCreateView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.data_views import RawDataListView, RawDataProcessingView
+from vod.cleansing_views import DataCleansingTemplatesListView, DataCleansingTemplateCreateView
 from vod.upload_views import UploadListView
 from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView, LoginView
 from vod import helper_views
@@ -65,6 +66,9 @@ urlpatterns = [
     url(r'^data/uploaded-raw/$', login_required(RawDataListView.as_view()), name='raw-data-list'),
     url(r'^data/uploaded-raw/complete/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-complete'),
     url(r'^data/uploaded-raw/valid/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-valid'),
+
+    url(r'^data/cleansing-profile/$', login_required(DataCleansingTemplatesListView.as_view()), name='cleansing-profile-list'),
+    url(r'^data/cleansing-profile/create/$', login_required(DataCleansingTemplateCreateView.as_view()), name='cleansing-profile-create'),
 
     # route to helper views
     url(r'^ajax/validate_username/$', helper_views.validate_username, name='validate_username'),
