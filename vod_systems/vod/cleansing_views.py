@@ -1,8 +1,9 @@
-from django.views.generic import ListView, CreateView
+from django.core.urlresolvers import reverse
+from django.views.generic import ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect
 
 from models import Data_Cleansing_Template_Field, Data_Cleansing_Template, User_Institution, Institution
-from cleansing_forms import DataCleansingTemplateCreateView
+from cleansing_forms import DataCleansingTemplateFieldUpdateForm, DataCleansingTemplateCreateForm
 from parsley.decorators import parsleyfy
 
 import datetime
@@ -12,6 +13,39 @@ import csv
 # TODO - select form, read in header to get descriptions, and get admin to setup the cleaning properties
 
 # TODO - try to modal above activities
+
+
+# class DataCleansingTemplateFieldsListView(ListView):
+#     model = Data_Cleansing_Template_Field
+#     template_name = './common/modal-display-template.html'
+#
+#     def get_queryset(self):
+#         template = Data_Cleansing_Template.objects.get(id=self.kwargs['id'])
+#         return Data_Cleansing_Template_Field.objects.all().filter(fk_cleansing_template_id=template)
+
+
+class DataCleansingTemplateFieldsUpdateView(UpdateView):
+    form_class = parsleyfy(DataCleansingTemplateFieldUpdateForm)
+    model = Data_Cleansing_Template_Field
+    template_name = '../templates/common/modal-template.html'
+    view_title = 'Update Data Cleansing Template Field'
+    selected_pk = 0
+
+    def get_form(self, form_class=None):
+        form = super(DataCleansingTemplateFieldsUpdateView, self).get_form(form_class)
+        form.helper.form_action = reverse('cleansing-template-field-update', kwargs={'id': self.selected_pk})
+        return form
+
+    def get_object(self, queryset=None):
+        self.selected_pk = self.kwargs['id']
+        return Data_Cleansing_Template_Field.objects.get(id=self.kwargs['id'])
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('cleansing-profile-list')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form, ))
 
 
 class DataCleansingTemplatesListView(ListView):
@@ -47,7 +81,7 @@ class DataCleansingTemplatesListView(ListView):
             # # handling a CSV file being uploaded
             if self.validate_file_extension(myfile.name, ['csv']):
 
-                print 'Handle uploaded file here'
+                # print 'Handle uploaded file here'
                 # separate code fired depending on filetype being handled
                 if (myfile.name.endswith('csv')):
                     datafields, data = self.read_csv_file(myfile)
@@ -77,35 +111,9 @@ class DataCleansingTemplatesListView(ListView):
 
                         Data_Cleansing_Template_Field.objects.bulk_create(datafield_objects)
 
-                    # for record in data:
-                    #     for field in datafields:
-                    #         print(record[field])
+                else:
+                    print 'Unexpected file type attempted upload'
 
-
-                #     # saving file to server filesystem - do we need to do this??
-                #     fs = FileSystemStorage()
-                #     filename = fs.save(myfile.name, myfile)
-
-                #     uploaded_file_url = fs.url(filename)
-                #     # return render(request, 'core/simple_upload.html', {'uploaded_file_url': uploaded_file_url})
-                #
-                #     csv_result, rows_error, total_rows = self.handle_uploaded_file(myfile, uploaded_file_pk , self.account_valid_fields, self.create_account_in_db)
-                #
-                #     if csv_result:
-                #         uploaded_file.outcome = 'CSV read in. Uploaded raw data successful. Rows failed: ' + str(rows_error)
-                #     else:
-                #         uploaded_file.outcome = 'CSV read in. Raw data upload failed. Rows failed: ' + str(rows_error)
-                #
-                #     uploaded_file.rows_errored = rows_error
-                #     uploaded_file.rows_uploaded = total_rows
-                #
-            else:
-                 print 'Unexpected file type attempted upload'
-            #
-            # # save file upload audit entry
-            # uploaded_file.save()
-            #
-            # # return render(request, 'core/simple_upload.html')
         return redirect('cleansing-profile-list')
 
     # validates the extension of a given file. checking against a list of possible valid extensions
@@ -133,7 +141,7 @@ class DataCleansingTemplatesListView(ListView):
 
 
 class DataCleansingTemplateCreateView(CreateView):
-    form_class = parsleyfy(DataCleansingTemplateCreateView)
+    form_class = parsleyfy(DataCleansingTemplateCreateForm)
     template_name = '../templates/common/modal-template.html'
     view_title = 'Create new cleansing template'
 

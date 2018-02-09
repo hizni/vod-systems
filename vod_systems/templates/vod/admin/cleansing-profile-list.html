@@ -39,13 +39,15 @@
 <div class="panel panel-default">
     <div class="panel-heading">Data Cleansing Templates
         <div class="pull-right">
-            <button id="btnAdd" class="btn btn-success btn-xs disabled" type="submit" href="{% url 'cleansing-profile-create' %}" data-toggle="modal" data-target="#modal">Add</button>
+{#            <button id="btnAdd" class="btn btn-success btn-xs disabled" type="submit" href="{% url 'cleansing-profile-create' %}" data-toggle="modal" data-target="#modal">Add</button>#}
+            <button id="btnAdd" class="btn btn-success btn-xs" type="submit" href="{% url 'app-models' %}" >Add</button>
+
         </div>
     </div>
 
     <div class="panel-body">
             <!-- main window content will be displayed here -->
-            <table id="example" class="display compact" cellspacing="0" width="100%">
+            <table id="templates" class="display compact" cellspacing="0" width="100%">
                 <thead>
                 <tr>
                     <th>Data Cleansing ID</th>
@@ -67,7 +69,7 @@
                         <td>{{ i.added_date }}</td>
                         <td>{{ i.is_active }}</td>
                         <td>
-                            <button id="btnConfig" class="btn btn-info btn-xs" type="submit">Config</button>
+{#                            <button id="btnConfig" class="btn btn-info btn-xs" type="submit" href="{% url 'cleansing-profile-detail' id=i.id %}" data-toggle="modal" data-target="#modal">Config</button>#}
                             <button id="btnDelete" class="btn btn-danger btn-xs" type="submit">Delete</button>
                         </td>
                     </tr>
@@ -75,7 +77,7 @@
                 </tbody>
             </table>
 
-            <div class="modal fade" id="modal"></div>
+{#            <div class="modal fade" id="modal"></div>#}
     </div>
 </div>
 
@@ -84,15 +86,15 @@
 
     <div class="panel-body">
             <!-- main window content will be displayed here -->
-            <table id="example" class="display compact" cellspacing="0" width="100%">
+            <table id="fields" class="display compact" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th>Template ID</th>
-                    <th>Column</th>
-                    <th>Description (headimg)</th>
-                    <th>Is nullable</th>
+{#                  <th>Template ID</th>#}
+                    <th>Column pos</th>
+                    <th>Description (heading)</th>
                     <th>Domain</th>
-                    <th>Domain constraint</th>
+                    <th>Is nullable</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -106,24 +108,90 @@
 
 <script>
 
-var table;
+var templateTable, fieldTable;
+var templateIdx = 0;
+var simple_checkbox = function(data, type , full, meta){
+    var is_checked = data == true ? "checked" : "";
+    return '<input type="checkbox" class="checkbox" ' +  is_checked + ' onclick="return false"/>';
+}
+
+var edit_button = function (data) {
+
+{#    $.get("{% url 'cleansing-template-field-update' %}",{id:data})#}
+{#        .done(function(data){#}
+{#            var the_url = data;#}
+{#            console.log(the_url);#}
+{#        })#}
+
+    var url_mask = "{% url 'cleansing-template-field-update' id=12345 %}".replace(/12345/, data);
+    return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" href="'+ url_mask +'">Edit</button>';
+}
+
+// function runs on loading of page
 $(document).ready(function() {
     $('#btnGoUpload').attr('disabled', true);
-    table = $('#example').DataTable({
+
+    templateTable = $('#templates').DataTable({
         "bFilter": false,  // switch of search functionality
+    });
+
+    fieldTable = $('#fields').DataTable({
+        "bFilter": false,  // switch of search functionality
+        'ajax': {
+            "type"   : "GET",
+            "url"    : '/vod/ajax/cleansing-profile-detail/',
+            "data"   : function( d ) {
+                d.id= templateIdx;
+            },
+            "dataSrc": ""
+        },
+        columns: [
+            { data: "fields.column_position" },
+            { data: "fields.description" },
+            { data: "fields.domain_referenced" },
+            { data: "fields.is_nullable", "render": simple_checkbox },
+            { data: "pk", "render": edit_button }
+        ]
     });
 } );
 
-//script that handles the viewing of the modal CBVs
-$('#modal').on('show.bs.modal', function (event) {
-    var modal = $(this)
-    $.ajax({
-        url: $(event.relatedTarget).attr('href'),
-        context: document.body
-    }).done(function(response) {
-        modal.html(response);
-        $(this).removeData('bs.modal');
-    });
+// highlighting a row on clicking it
+$('#templates tbody').on( 'click', 'tr', function () {
+    if ( $(this).hasClass('selected') ) {
+        $(this).removeClass('selected');
+    }
+    else {
+        templateTable.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+
+        var idx = templateTable.cell('.selected', 0).index();
+        templateIdx = templateTable.rows( idx.row ).data()[0][0];
+
+        $('#fields').DataTable().ajax.reload();
+    }
+});
+
+// function runs after selecting a file
+$(':file').on('fileselect', function(event, numFiles, label) {
+
+  var input = $(this).parents('.input-group').find(':text'),
+      log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+  if (numFiles == 0){
+      $('#btnGoUpload').attr('disabled', true);
+      input.val(log);
+  }
+  else {
+      if( input.length ) {
+        input.val(log);
+        $('#btnGoUpload').attr('disabled', false);
+      } else {
+        $('#btnGoUpload').attr('disabled', true);
+        if( log ) {
+            input.val(log);
+        }
+      }
+  }
 });
 
 // functions that are used for file selection
@@ -136,31 +204,22 @@ var input = $(this),
     input.trigger('fileselect', [numFiles, label]);
 });
 
-// We can watch for our custom fileselect event like this
-$(document).ready( function() {
-  $(':file').on('fileselect', function(event, numFiles, label) {
-
-      var input = $(this).parents('.input-group').find(':text'),
-          log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-      if (numFiles == 0){
-          $('#btnGoUpload').attr('disabled', true);
-          input.val(log);
-      }
-      else {
-          if( input.length ) {
-            input.val(log);
-            $('#btnGoUpload').attr('disabled', false);
-          } else {
-          $('#btnGoUpload').attr('disabled', true);
-            if( log ) {
-                alert(log);
-                input.val(log);
-            }
-          }
-      }
-  });
+//script that handles the viewing of the modal CBVs
+$('#modal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    $.ajax({
+        url: $(event.relatedTarget).attr('href'),
+        context: document.body
+    }).done(function(response) {
+        modal.html(response);
+        $(this).removeData('bs.modal');
+    });
 });
+
+
+
+
+
 
 </script>
 {% endblock %}

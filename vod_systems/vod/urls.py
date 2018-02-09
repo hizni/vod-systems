@@ -12,7 +12,7 @@ from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateV
     PatientIdentifiersDetailView, PatientAliasCreateView, PatientTransplantCreateView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
 from vod.data_views import RawDataListView, RawDataProcessingView
-from vod.cleansing_views import DataCleansingTemplatesListView, DataCleansingTemplateCreateView
+from vod.cleansing_views import DataCleansingTemplatesListView, DataCleansingTemplateCreateView, DataCleansingTemplateFieldsUpdateView
 from vod.upload_views import UploadListView
 from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView, LoginView
 from vod import helper_views
@@ -68,10 +68,15 @@ urlpatterns = [
     url(r'^data/uploaded-raw/valid/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-valid'),
 
     url(r'^data/cleansing-profile/$', login_required(DataCleansingTemplatesListView.as_view()), name='cleansing-profile-list'),
-    url(r'^data/cleansing-profile/create/$', login_required(DataCleansingTemplateCreateView.as_view()), name='cleansing-profile-create'),
+    # url(r'^data/cleansing-profile/create/$', login_required(DataCleansingTemplateCreateView.as_view()), name='cleansing-profile-create'),
+    # url(r'^data/cleansing-profile/detail/(?P<id>\d+)/$', login_required(DataCleansingTemplateFieldsListView.as_view()), name='cleansing-profile-detail'),
+    url(r'^data/cleansing-profile/detail/update/(?P<id>\d+)/$', login_required(DataCleansingTemplateFieldsUpdateView.as_view()), name='cleansing-template-field-update'),
+
 
     # route to helper views
     url(r'^ajax/validate_username/$', helper_views.validate_username, name='validate_username'),
+    url(r'^ajax/cleansing-profile-detail/$', helper_views.dataCleansingTemplateFields_asJSON, name='ajax-cleansing-profile-detail'),
+    url(r'^ajax/models/$', helper_views.modelsInApp, name='app-models'),
 ]
 
 if settings.DEBUG:
