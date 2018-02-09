@@ -1,4 +1,3 @@
-{% load crispy_forms_tags %}
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -9,32 +8,25 @@
             <h4 class="modal-title">{{ view.view_title }}</h4>
         </div>
         <div class="modal-body">
-                        <!-- main window content will be displayed here -->
-            <table id="example" class="display" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th>Upload Id</th>
-                    <th>Institutional Id</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                    {% for i in object_list %}
-                    <tr>
-                        <td>{{ i.id }}</td>
-                        <td>{{ i.processing_outcome }}</td>
+            <div class="validation-errors-container panel panel-danger" role="alert" aria-labelledby="validation-errors-heading" aria-live="assertive">
+                <div class="validation-errors-container"></strong> Please correct the following errors...</div>
+              <div>
+                    <ul class="validation-errors-list"></ul>
+              </div>
+            </div>
 
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% crispy form %}
 
         </div>
     </div>
 </div><!-- /.modal-dialog -->
 
+
+
+{% block specific-scripts %}
 <script>
 
 </script>
 
-{% block specific-scripts %} {% endblock %}
+{% endblock %}
