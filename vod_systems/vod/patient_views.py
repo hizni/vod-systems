@@ -133,7 +133,7 @@ class PatientUpdateView(UpdateView):
 
     def get_form(self, form_class=None):
         form = super(PatientUpdateView, self).get_form(form_class)
-        form.helper.form_action = reverse('datatype-update', kwargs={'id': self.selected_pk})
+        form.helper.form_action = reverse('patient-update', kwargs={'id': self.selected_pk})
         return form
 
     def get_object(self, queryset=None):
@@ -142,7 +142,7 @@ class PatientUpdateView(UpdateView):
 
     def form_valid(self, form):
         form.save()
-        return redirect('datatype-list')
+        return redirect('patient-list')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form, ))
@@ -157,7 +157,7 @@ class PatientRetireView(UpdateView):
 
     def get_form(self, form_class=None):
         form = super(PatientRetireView, self).get_form(form_class)
-        form.helper.form_action = reverse('datatype-retire', kwargs={'id': self.selected_pk})
+        form.helper.form_action = reverse('patient-retire', kwargs={'id': self.selected_pk})
         return form
 
     def get_object(self, queryset=None):
@@ -166,7 +166,7 @@ class PatientRetireView(UpdateView):
 
     def form_valid(self, form):
         form.save()
-        return redirect('datatype-list')
+        return redirect('patient-list')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form, ))
