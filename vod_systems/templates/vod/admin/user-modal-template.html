@@ -2,124 +2,30 @@
 
 {% block specific-scripts %}
 <script>
-/*
-        // promise - check if username already exists
-        $("#username").change(function () {
-            var username = $(this).val();
 
-            $.ajax({
-                url: '/vod/ajax/validate_username/',
-                data: {
-                  'username': username
-                },
-                dataType: 'json',
-                success: function (data) {
-                  if (data.is_taken) {
-                    //alert("A user with this username already exists.");
+    window.Parsley.addValidator('userexist',
+    function (value, requirement) {
+        //ParsleyJS return false if validation fails
+        //online example test code
+        //alert('userexist custom validator. value: ' + value + '; requirement: ' + requirement);
+        //return false;
 
-                    //var item = $.validationErrors.list.find('li[data-related-field-name="username"]');
-                    //if (item.length === 0){
-                    //    var m = $('<li data-related-field-name="username"> A user with this username already exists. </li>');
-                    //    $.validationErrors.list.append(m);
-
-                        //$("input[name=username]").parsley().destroy();
-                        //$("#username").parsley().invalid();
-                        //$('[name="username"]').parsley().addError('error-userExist', { message: 'That username already exists' }); // add error message
-                    //}
-
-                    $('[name="username"]').parsley().addError('error-message', { message: 'That username already exists' }); // add error message
-                    $('#form username').parsley().validate();
-                  }
-                  else{
-                      //$.validationErrors.removeItem('username');
-                      $('[name="username"]').parsley().removeError('error-message'); // remove first message
-                  }
-                  //$("#username").parsley().invalid();
-                  //$.validationErrors.updateContainer();
-                }
-            });
-
-            $('[name="username"]').parsley().validate();
+        //my test code
+        var valid = false;
+        $.ajax({
+            url: '/vod/ajax/validate_username/',
+            data: {
+              'username': value
+            },
+            dataType: 'json',
+            async: false, // sets whether this task is carried out async or not
+            success: function (data) {
+                valid = !data.is_taken;
+            }
         });
-*/
-
-/*
-window.Parsley.addValidator('userexist', {
-  validateString: function(value) {
-    $.ajax({
-        url: '/vod/ajax/validate_username/',
-        data: {
-          'username': value
-        },
-        dataType: 'json',
-        success: function (data) {
-            //if (data.is_taken) {
-            //    return false;
-            //}
-            return !(data.is_taken);
-        }
-    });
-  },
-  messages: {
-    en: 'This username is already being used. Select another...',
-  }
-});
-*/
-
-window.Parsley.addValidator('userexist',
-function (value, requirement) {
-    //ParsleyJS return false if validation fails
-    //online example test code
-    //alert('userexist custom validator. value: ' + value + '; requirement: ' + requirement);
-    //return false;
-
-    //my test code
-{#    if (value == 'test')#}
-{#        return false;#}
-{#    else#}
-{#        return true;#}
-
-    var valid = false;
-    $.ajax({
-        url: '/vod/ajax/validate_username/',
-        data: {
-          'username': value
-        },
-        dataType: 'json',
-        async: false, // sets whether this task is carried out async or not
-        success: function (data) {
-            valid = !data.is_taken;
-        }
-    });
-
-{#    var request = $.ajax({#}
-{#        url: '/vod/ajax/validate_username/',#}
-{#        data: {#}
-{#          'username': value#}
-{#        },#}
-{#        dataType: 'json',#}
-{#        success: function(data) {}#}
-{#    });#}
-{##}
-{#    var foo = request.done(function(msg) {#}
-{##}
-{#        //console.log('here i am in the done() function');#}
-{#        //console.log(msg);#}
-{##}
-{##}
-{#        //console.log("the username is taken test outcome: " + msg.is_taken);#}
-{##}
-{#        // return the response message#}
-{#        return msg;#}
-{#    });#}
-{##}
-{#    console.log("Returned response object from done(): " + request);#}
-
-
-
-    return valid;
-}, 32)
-.addMessage('en', 'userexist', 'This username is already being used. Select another...');
+        return valid;
+    }, 32)
+    .addMessage('en', 'userexist', 'This username is already being used. Select another...');
 
 </script>
 {% endblock %}
