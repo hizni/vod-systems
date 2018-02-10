@@ -69,6 +69,36 @@ $(document).ready(function() {
     table = $('#example').DataTable({
         "bFilter": false  // switch of search functionality
     });
+
+    //notifications - let user know meta data needs to be added before uploading data
+    if ({{ institutions}} == 0) {
+        $.bootstrapGrowl("You need to add some institutions", {
+            type: 'warning', // (null, 'info', 'error', 'success')
+            width: 250
+        });
+    };
+
+        if ({{datatypes}} == 0) {
+        $.bootstrapGrowl("You need to add some datatypes", {
+            type: 'warning', // (null, 'info', 'error', 'success')
+            width: 250
+        });
+    };
+
+    if ({{ alias_identifiers}} == 0) {
+        $.bootstrapGrowl("You need to add some alias identifiers", {
+            type: 'warning', // (null, 'info', 'error', 'success')
+            width: 250
+        });
+    };
+
+    if ({{ transplants}} == 0) {
+        $.bootstrapGrowl("You need to add some transplant types", {
+            type: 'warning', // (null, 'info', 'error', 'success')
+            width: 250
+        });
+    };
+
 } );
 
 //script that handles the viewing of the modal CBVs
