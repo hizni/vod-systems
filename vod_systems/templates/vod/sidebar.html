@@ -8,32 +8,70 @@
             <table class="table">
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-user"></span><a href="{% url 'user-list' %}">User</a>
+
+                        <span class="glyphicon glyphicon-user"></span>
+                        <a href="{% url 'user-list' %}">User</a>
+                            {% if users == 0 %}
+                                <span class="label label-danger pull-right">{{ users }}</span>
+                            {% else %}
+                                <span class="label label-info pull-right">{{ users  }}</span>
+                            {% endif %}
+
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-buildings"></span><a href="{% url 'institution-list' %}">Institution</a>
+                        <span class="glyphicon glyphicon-buildings"></span>
+                        <a href="{% url 'institution-list' %}">Institution</a>
+                             {% if institutions == 0 %}
+                                <span class="label label-danger pull-right">{{ institutions}}</span>
+                            {% else %}
+                                <span class="label label-info pull-right">{{ institutions}}</span>
+                            {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-usd"></span><a href="{% url 'alias-id-list' %}">Alias Identifier</a>
+                        <span class="glyphicon glyphicon-usd"></span>
+                        <a href="{% url 'alias-id-list' %}">Alias Identifier</a>
+                             {% if alias_identifiers == 0 %}
+                                <span class="label label-danger pull-right">{{ alias_identifiers}}</span>
+                            {% else %}
+                                <span class="label label-info pull-right">{{ alias_identifiers}}</span>
+                            {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-usd"></span><a href="{% url 'datatype-list' %}">Data Type</a>
+                        <span class="glyphicon glyphicon-usd"></span>
+                        <a href="{% url 'datatype-list' %}">Data Type</a>
+                            {% if datatypes == 0 %}
+                                <span class="label label-danger pull-right">{{ datatypes  }}</span>
+                            {% else %}
+                                <span class="label label-info pull-right">{{ datatypes }}</span>
+                            {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-usd"></span><a href="{% url 'transplant-list' %}">Transplant Type</a>
+                        <span class="glyphicon glyphicon-usd"></span>
+                        <a href="{% url 'transplant-list' %}">Transplant Type</a>
+                             {% if transplants == 0 %}
+                                <span class="label label-danger pull-right">{{ transplants }}</span>
+                            {% else %}
+                                <span class="label label-info pull-right">{{ transplants }}</span>
+                            {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-usd"></span><a href="{% url 'cleansing-profile-list' %}">Cleansing Profiles</a>
+                        <span class="glyphicon glyphicon-usd"></span>
+                        <a href="{% url 'cleansing-profile-list' %}">Cleansing Profiles</a>
+                             {% if cleansing_templates == 0 %}
+                                <span class="label label-danger pull-right">{{ cleansing_templates }}</span>
+                            {% else %}
+                                <span class="label label-info pull-right">{{ cleansing_templates }}</span>
+                            {% endif %}
                     </td>
                 </tr>
             </table>
@@ -49,17 +87,25 @@
             <table class="table">
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-user"></span><a href="{% url 'upload-list' %}">Upload Data File</a>
+                        <span class="glyphicon glyphicon-user"></span>
+                        <a href="{% url 'upload-list' %}">Upload Data File</a>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-user"></span><a href="{% url 'raw-data-list' %}">View Raw Data</a>
+                        <span class="glyphicon glyphicon-user"></span>
+                        <a href="{% url 'raw-data-list' %}">View Raw Data</a>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="glyphicon glyphicon-user"></span><a href="{% url 'patient-list' %}">Patient</a>
+                        <span class="glyphicon glyphicon-user"></span>
+                        <a href="{% url 'patient-list' %}">Patient</a>
+{#                             {% if patients.length == 0 %}#}
+{#                                <span class="label label-danger pull-right">{{ patients | length }}</span>#}
+{#                            {% else %}#}
+{#                                <span class="label label-info pull-right">{{ patients | length }}</span>#}
+{#                            {% endif %}#}
                     </td>
                 </tr>
             </table>

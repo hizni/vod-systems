@@ -1,7 +1,8 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
-from models import Upload_History, Patient_Transplant, Raw_Uploaded_Data
+from models import User_Institution, Institution, Datatype, Transplant_Type, Alias_Identifier, Data_Cleansing_Template, \
+    Data_Cleansing_Template_Field, User, Upload_History, Patient_Transplant, Raw_Uploaded_Data
 from django.core.files.storage import FileSystemStorage
 import datetime
 import csv
@@ -14,6 +15,20 @@ class UploadListView(ListView):
 
     def get_queryset(self):
         return Upload_History.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(UploadListView, self).get_context_data(**kwargs)
+        # context['user_institutions_list'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id)
+
+        context['users'] = User.objects.all().count()
+        context['institutions'] = Institution.objects.all().count()
+        context['alias_identifiers'] = Alias_Identifier.objects.all().count()
+        context['user_institutions'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id).count()
+        context['datatypes'] = Datatype.objects.all().count()
+        context["transplants"] = Transplant_Type.objects.all().count()
+        context['cleansing_templates'] = Data_Cleansing_Template.objects.all().count()
+        # context['patients'] = Patient.objects.all().filter(fk_institution_id=context["user_institutions"])
+        return context
 
     def post(self, request):
         if request.method == 'POST' and request.FILES['myfile']:

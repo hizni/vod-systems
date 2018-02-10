@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, UpdateView, FormView
 from parsley.decorators import parsleyfy
 
-from models import User_Institution, Institution
+from models import User_Institution, Institution, Datatype, Patient, Transplant_Type, Alias_Identifier, Data_Cleansing_Template
 from user_forms import UserCreateForm, UserDetailUpdateForm, UserRetireForm, LoginForm
 
 
@@ -77,6 +77,18 @@ class UserListView(ListView):
 
     def get_queryset(self):
         return User.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        context['users'] = User.objects.all().count()
+        context['institutions'] = Institution.objects.all().count()
+        context['alias_identifiers'] = Alias_Identifier.objects.all().count()
+        context['user_institutions'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id).count()
+        context['datatypes'] = Datatype.objects.all().count()
+        context["transplants"] = Transplant_Type.objects.all().count()
+        context['cleansing_templates'] = Data_Cleansing_Template.objects.all().count()
+        # context['patients'] = Patient.objects.all().filter(fk_institution_id=context["user_institutions"])
+        return context
 
 
 class UserCreateView(CreateView):

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 
 from models import Alias_Identifier
 from django.core.urlresolvers import reverse
-
+from models import User_Institution, Institution, Datatype, Transplant_Type, Alias_Identifier, Data_Cleansing_Template, Data_Cleansing_Template_Field, User
 from alias_id_forms import AliasIdCreateUpdateForm, AliasIdRetireForm
 from parsley.decorators import parsleyfy
 
@@ -24,6 +24,17 @@ class AliasIdListView(ListView):
     def get_queryset(self):
         return Alias_Identifier.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super(AliasIdListView, self).get_context_data(**kwargs)
+        context['users'] = User.objects.all().count()
+        context['institutions'] = Institution.objects.all().count()
+        context['alias_identifiers'] = Alias_Identifier.objects.all().count()
+        context['user_institutions'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id).count()
+        context['datatypes'] = Datatype.objects.all().count()
+        context["transplants"] = Transplant_Type.objects.all().count()
+        context['cleansing_templates'] = Data_Cleansing_Template.objects.all().count()
+        # context['patients'] = Patient.objects.all().filter(fk_institution_id=context["user_institutions"])
+        return context
 
 class AliasIdCreateView(CreateView):
     form_class = parsleyfy(AliasIdCreateUpdateForm)

@@ -58,7 +58,10 @@ $(document).ready(function() {
     var url = document.referrer;
     var lastPart = url.substr(url.lastIndexOf('/') + 1);
     if(lastPart === 'login')
-        $.bootstrapGrowl("Welcome from Login");
+        $.bootstrapGrowl("Welcome back {{ user }}", {
+            type: 'success', // (null, 'info', 'error', 'success')
+            width: 250
+        });
 
 
 } );

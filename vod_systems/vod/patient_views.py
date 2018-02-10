@@ -1,6 +1,6 @@
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.shortcuts import render, redirect,HttpResponseRedirect
-from models import Patient, Patient_Identifier ,User_Institution, Patient_Transplant, Transplant_Type, Alias_Identifier, Institution
+from models import User_Institution, Institution, Datatype, Transplant_Type, Alias_Identifier, Data_Cleansing_Template, User, Patient, Patient_Identifier, Patient_Transplant
 from django.core.urlresolvers import reverse
 
 from patient_forms import PatientCreateUpdateForm, PatientRetireForm, PatientAliasCreateForm, \
@@ -33,6 +33,15 @@ class PatientListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(PatientListView, self).get_context_data(**kwargs)
         context['user_institutions_list'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id)
+
+        context['users'] = User.objects.all().count()
+        context['institutions'] = Institution.objects.all().count()
+        context['alias_identifiers'] = Alias_Identifier.objects.all().count()
+        context['user_institutions'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id).count()
+        context['datatypes'] = Datatype.objects.all().count()
+        context["transplants"] = Transplant_Type.objects.all().count()
+        context['cleansing_templates'] = Data_Cleansing_Template.objects.all().count()
+        # context['patients'] = Patient.objects.all().filter(fk_institution_id=context["user_institutions"])
         return context
 
 
