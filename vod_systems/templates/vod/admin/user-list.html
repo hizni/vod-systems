@@ -54,7 +54,7 @@ $(document).ready(function() {
         "bFilter": false  // switch of search functionality
     });
 
-    // check page coming from. If from login - notify of any problems
+    // check page coming from. If from login - welcome user
     var url = document.referrer;
     var lastPart = url.substr(url.lastIndexOf('/') + 1);
     if(lastPart === 'login')
