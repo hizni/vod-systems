@@ -136,6 +136,7 @@ class Data_Cleansing_Template_Field(models.Model):
     description = models.CharField(max_length=100)
     domain_referenced = models.CharField(max_length=100, null=True)
     is_nullable = models.BooleanField(default=True)
+    data_target_column = models.CharField(max_length=100, null=True)
 
 
 
