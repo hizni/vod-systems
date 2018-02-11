@@ -19,6 +19,7 @@ class UploadListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(UploadListView, self).get_context_data(**kwargs)
         # context['user_institutions_list'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id)
+        context['templates_list'] = Data_Cleansing_Template.objects.all()
 
         context['users'] = User.objects.all().count()
         context['institutions'] = Institution.objects.all().count()
@@ -49,7 +50,7 @@ class UploadListView(ListView):
                 uploaded_file_url = fs.url(filename)
                 # return render(request, 'core/simple_upload.html', {'uploaded_file_url': uploaded_file_url})
 
-                csv_result, rows_error, total_rows = self.handle_uploaded_file(myfile, uploaded_file_pk , self.account_valid_fields, self.create_account_in_db)
+                csv_result, rows_error, total_rows = self.handle_uploaded_file(myfile, uploaded_file_pk, self.account_valid_fields, self.create_record_in_db)
 
                 if csv_result:
                     uploaded_file.outcome = 'CSV read in. Uploaded raw data successful. Rows failed: ' + str(rows_error)
@@ -115,7 +116,7 @@ class UploadListView(ListView):
         return True
 
     # create record in database
-    def create_account_in_db(self, upload_identifier, dict_data):
+    def create_record_in_db(self, upload_identifier, dict_data):
         list_data = []
         result = False      # explicity set to false
         rows_error = 0
@@ -124,33 +125,52 @@ class UploadListView(ListView):
         for record in dict_data:
 
             # instantiate
-            account = Raw_Uploaded_Data()
+            uploaded_data = Raw_Uploaded_Data()
 
-            # populate the Raw_Uploaded_Data object
+            # populate the Raw_Uploaded_Data object.
+            # the structure being uploaded to is hardcoded
             try:
-                account.fk_upload_history_id=upload_identifier
-                account.fk_pt_institutional_id=record['fk_pt_institutional_id']
-                account.fk_pt_department_id=record['fk_pt_department_id']
-                account.fk_pt_identifier_type=record['fk_pt_identifier_type']
-                account.fk_pt_identifier_type_value=record['fk_pt_identifier_type_value']
-                account.fk_transplant_number=record['fk_transplant_number']
-                account.fk_transplant_type=record['fk_transplant_type']
-                account.fk_transplant_day_zero=record['fk_transplant_day_zero']
-                account.fk_transplant_start_weight_data_type=record['fk_pt_department_id']
-                account.fk_transplant_start_weight=record['fk_transplant_start_weight']
-                account.fk_transplant_start_renal_function_data_type=record['fk_transplant_start_renal_function_data_type'],
-                account.fk_transplant_start_renal_function=record['fk_transplant_start_renal_function']
-                account.fk_data_type=record['fk_data_type']
-                account.data_value=record['data_value']
-                account.data_date=record['data_date']
-                account.upload_processing = 'R'
+
+                # uploaded_data.fk_upload_history_id = upload_identifier
+                # uploaded_data.fk_pt_institutional_id = record['fk_pt_institutional_id']
+                # uploaded_data.fk_pt_department_id = record['fk_pt_department_id']
+                # uploaded_data.fk_pt_identifier_type = record['fk_pt_identifier_type']
+                # uploaded_data.fk_pt_identifier_type_value = record['fk_pt_identifier_type_value']
+                # uploaded_data.fk_transplant_number = record['fk_transplant_number']
+                # uploaded_data.fk_transplant_type = record['fk_transplant_type']
+                # uploaded_data.fk_transplant_day_zero = record['fk_transplant_day_zero']
+                # uploaded_data.fk_transplant_start_weight_data_type = record['fk_pt_department_id']
+                # uploaded_data.fk_transplant_start_weight = record['fk_transplant_start_weight']
+                # uploaded_data.fk_transplant_start_renal_function_data_type = record['fk_transplant_start_renal_function_data_type']
+                # uploaded_data.fk_transplant_start_renal_function = record['fk_transplant_start_renal_function']
+                # uploaded_data.fk_data_type = record['fk_data_type']
+                # uploaded_data.data_value = record['data_value']
+                # uploaded_data.data_date = record['data_date']
+                # uploaded_data.upload_processing = 'R'
+
+                setattr(uploaded_data, 'fk_upload_history_id', upload_identifier)
+                setattr(uploaded_data, 'fk_pt_institutional_id', record['fk_pt_institutional_id'])
+                setattr(uploaded_data, 'fk_pt_department_id', record['fk_pt_department_id'] )
+                setattr(uploaded_data, 'fk_pt_identifier_type',record['fk_pt_identifier_type'] )
+                setattr(uploaded_data, 'fk_pt_identifier_type_value',record['fk_pt_identifier_type_value'] )
+                setattr(uploaded_data, 'fk_transplant_number',  record['fk_transplant_number'])
+                setattr(uploaded_data, 'fk_transplant_type', record['fk_transplant_type'])
+                setattr(uploaded_data,'fk_transplant_day_zero',record['fk_transplant_day_zero'])
+                setattr(uploaded_data,'fk_transplant_start_weight_data_type',record['fk_pt_department_id'] )
+                setattr(uploaded_data, 'fk_transplant_start_weight',record['fk_transplant_start_weight'] )
+                setattr(uploaded_data,'fk_transplant_start_renal_function_data_type',record['fk_transplant_start_renal_function_data_type'] )
+                setattr(uploaded_data,'fk_transplant_start_renal_function',record['fk_transplant_start_renal_function'])
+                setattr(uploaded_data,'fk_data_type', record['fk_data_type'] )
+                setattr(uploaded_data,'data_value',record['data_value'] )
+                setattr(uploaded_data,'data_date', record['data_date'] )
+                setattr(uploaded_data,'upload_processing', 'R')
 
             except Exception:
-                account.upload_processing = 'E'
+                uploaded_data.upload_processing = 'E'
                 pass
 
             # add it to a list of items
-            list_data.append(account)
+            list_data.append(uploaded_data)
 
         if list_data:
             # bulk_create will create multiple objects in a single query from the contents of the list_data list
