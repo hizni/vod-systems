@@ -59,7 +59,7 @@ class DataCleansingTemplatesListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DataCleansingTemplatesListView, self).get_context_data(**kwargs)
-        # context['user_institutions_list'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id)
+        context['user_institutions_list'] = User_Institution.objects.all().filter(fk_user_id=self.request.user.id)
 
         context['users'] = User.objects.all().count()
         context['institutions'] = Institution.objects.all().count()
@@ -98,8 +98,10 @@ class DataCleansingTemplatesListView(ListView):
                     template = Data_Cleansing_Template()
                     # if data fields have been returned then create a Data_Cleansing_Template
                     if datafields:
-                        template.fk_pt_institutional_id = Institution.objects.get(id=1)
-                        template.profile_name = 'foobar'
+                        # template.fk_pt_institutional_id = Institution.objects.get(id=1)
+                        # template.profile_name = 'foobar'
+                        template.fk_pt_institutional_id = Institution.objects.get(pk=request.POST['selectInst'])
+                        template.profile_name = request.POST['templateName']
                         template.is_active = True
                         template.added_by = request.user
                         template.added_date = datetime.datetime.now()

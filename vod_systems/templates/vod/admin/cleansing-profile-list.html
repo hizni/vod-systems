@@ -3,14 +3,14 @@
 {% block main-content %}
 
 <div class="panel panel-default">
-    <div class="panel-heading">Select Data File </div>
+    <div class="panel-heading">Create Data Upload Profile</div>
     <div class="panel-body">
         <p>
             Select a VOD data file to produce a skeleton data cleaning template that you will need to flesh out
         </p>
          <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-
+             <label for="lblTemplateInst">Template applies to data from:</label>
              <select id ="selectInst" name="selectInst">
                 {% if user_institutions_list|length > 1 %}
                     <option value="all">Show all...</option>
@@ -19,15 +19,20 @@
                     <option value="{{ i.fk_institution_id.id }}">{{ i.fk_institution_id.description }}</option>
                 {% endfor %}
             </select>
-            <br/><br/>
+            <br/>
+
+            <label for="lblTemplateName">Name of template</label>
+            <input type="text" class="form-control" id="templateName" name="templateName" aria-describedby="templateName" placeholder="Enter a name to describe the template" />
+
+            <label for="lblTemplateStructure">Select a data file to provide a structure for the template: </label><br>
              <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-primary">
                         Select data file&hellip; <input type="file" name="myfile" style="display: none;">
                     </span>
                 </label>
-                <input class="form-control" readonly>
-            </div>
+                <input class="form-control" readonly />
+             </div>
              <br>
              <div class="pull-right">
                  <button id="btnGoUpload" class="btn btn-success" type="submit">Upload Data</button>
@@ -37,7 +42,7 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Data Cleansing Templates
+    <div class="panel-heading">Data Upload Templates
         <div class="pull-right">
 {#            <button id="btnAdd" class="btn btn-success btn-xs disabled" type="submit" href="{% url 'cleansing-profile-create' %}" data-toggle="modal" data-target="#modal">Add</button>#}
             <button id="btnAdd" class="btn btn-success btn-xs" type="submit" href="{% url 'app-models' %}" >Add</button>
@@ -82,7 +87,7 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Data Cleansing Templates Fields</div>
+    <div class="panel-heading">Data Upload Templates Fields</div>
 
     <div class="panel-body">
             <!-- main window content will be displayed here -->
@@ -94,6 +99,7 @@
                     <th>Description (heading)</th>
                     <th>Domain</th>
                     <th>Is nullable</th>
+                    <th>Upload target</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -150,6 +156,7 @@ $(document).ready(function() {
             { data: "fields.description" },
             { data: "fields.domain_referenced" },
             { data: "fields.is_nullable", "render": simple_checkbox },
+            { data: "fields.data_target_column" },
             { data: "pk", "render": edit_button }
         ]
     });

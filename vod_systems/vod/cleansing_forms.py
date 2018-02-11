@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from models import Data_Cleansing_Template, Data_Cleansing_Template_Field
+from models import Data_Cleansing_Template, Data_Cleansing_Template_Field, Raw_Uploaded_Data
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, HTML, Button
 from crispy_forms.bootstrap import FormActions
@@ -56,16 +56,23 @@ class DataCleansingTemplateCreateForm(ModelForm):
 
 
 class DataCleansingTemplateFieldUpdateForm(ModelForm):
+
+    # get all models
     models = [[' ', '----']]  # initialise with an empty entry
     myapp = apps.get_app_config('vod')
     for model in myapp.models:
         models.append([model, model])
 
-    domain_referenced = forms.ChoiceField(label="Choose reference domain", required=False, choices=models)
+    # get all fields in RawUploadedData model
+    fields = [[' ', '----']]
+    for field in Raw_Uploaded_Data._meta.fields:
+        fields.append(([field.name, field.name]))
 
+    domain_referenced = forms.ChoiceField(label="Choose reference domain", required=False, choices=models)
+    data_target_column = forms.ChoiceField(label="Select target field in upload table", required=False, choices=fields)
     class Meta:
         model = Data_Cleansing_Template_Field
-        fields = ['column_position', 'description', 'domain_referenced', 'is_nullable']
+        fields = ['column_position', 'description', 'domain_referenced', 'data_target_column', 'is_nullable']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -114,9 +121,14 @@ class DataCleansingTemplateFieldUpdateForm(ModelForm):
                   data_parsley_errors_container="#message-container",
                   # data_parsley_required_message='',
                   ),
-            # Field('domains',
-            #       id='domains',
-            #       ),
+            Field('data_target_column',
+                  id='data_target_column',
+                  # data_parsley_required='false',
+                  data_parsley_length="[0,255]",
+                  data_parsley_trigger='change',
+                  data_parsley_errors_container="#message-container",
+                  # data_parsley_required_message='',
+                  ),
             Field('is_nullable',
                   id='is_nullable',
                   #data_parsley_required='false',
