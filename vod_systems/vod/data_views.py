@@ -4,14 +4,6 @@ from django.db import models
 
 from models import Raw_Uploaded_Data
 
-"""
-Institution model Class Based Views
-    InstitutionListView    - list all the institutions
-
-    InstitutionCreateView  - create a new institution
-    InstitutionUpdateView  - update a selected institution
-    InstitutionRetireView  - activate/deactivate the selected institution 
-"""
 
 
 class RawDataListView(ListView):
