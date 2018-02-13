@@ -116,7 +116,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'bower_components'),
 ]
-
+TEMPLATE_LOADERS = (
+    'django.template.loaders.app_directories.load_template_source',
+)
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
