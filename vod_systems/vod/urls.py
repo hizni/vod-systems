@@ -11,7 +11,7 @@ from vod.institution_views import InstitutionListView, InstitutionCreateView, In
 from vod.patient_views import PatientListView, PatientCreateView, PatientUpdateView, PatientRetireView, \
     PatientIdentifiersDetailView, PatientAliasCreateView, PatientTransplantCreateView
 from vod.transplant_views import TransplantListView, TransplantCreateView, TransplantUpdateView, TransplantRetireView
-from vod.data_views import RawDataListView, RawDataProcessingView
+from vod.data_views import RawDataListView, RawDataProcessingView, DataAnalysisDetailView
 from vod.cleansing_views import DataCleansingTemplatesListView, DataCleansingTemplateCreateView, DataCleansingTemplateFieldsUpdateView
 from vod.upload_views import UploadListView
 from vod.user_views import UserListView, UserCreateView, UserUpdateView, UserRetireView, LoginView
@@ -64,9 +64,9 @@ urlpatterns = [
 
     # url routes to view data
     url(r'^data/uploaded-raw/$', login_required(RawDataListView.as_view()), name='raw-data-list'),
-    url(r'^data/uploaded-raw/complete/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-complete'),
-    url(r'^data/uploaded-raw/valid/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-valid'),
-
+    # url(r'^data/uploaded-raw/complete/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-complete'),
+    # url(r'^data/uploaded-raw/valid/(?P<id>\d+)/$', login_required(RawDataProcessingView.as_view()), name='data-valid'),
+    url(r'^data/detail/(?P<id>\d+)/(?P<tid>\d+)/$', login_required(DataAnalysisDetailView.as_view()), name='data-analysis-detail'),
     url(r'^data/cleansing-profile/$', login_required(DataCleansingTemplatesListView.as_view()), name='cleansing-profile-list'),
     # url(r'^data/cleansing-profile/create/$', login_required(DataCleansingTemplateCreateView.as_view()), name='cleansing-profile-create'),
     # url(r'^data/cleansing-profile/detail/(?P<id>\d+)/$', login_required(DataCleansingTemplateFieldsListView.as_view()), name='cleansing-profile-detail'),

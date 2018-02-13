@@ -1,9 +1,75 @@
-from django.views.generic import ListView, View
+from django.views.generic import ListView, DetailView
 from django.shortcuts import render, redirect
 from django.db import models
 
-from models import Raw_Uploaded_Data
+from models import Raw_Uploaded_Data, Patient_Identifier, Patient, Transplant_Type, Patient_Transplant
 
+
+class DataAnalysisDetailView(DetailView):
+    model = Raw_Uploaded_Data
+    template_name = './vod/user/data-detail.html'
+    view_title = 'Data analysis details'
+    selected_pt_pk = 0
+    selected_transplant_num = 0
+    selected_transplant_type = 0
+
+    def get_queryset(self):
+        patientTransplant = Patient_Transplant.objects.filter(id=self.request.user.id)
+        return patientTransplant
+
+    def get_object(self, queryset=None):
+        # passed the pk ID for the patient object being looked at
+        self.selected_pt_pk = self.kwargs['id']
+        self.selected_transplant_pk = self.kwargs['tid']
+
+        transplant = Patient_Transplant.objects.get(id=self.kwargs['tid'])
+
+        self.selected_transplant_num = transplant.number
+        self.selected_transplant_type_code = transplant.fk_transplant_type.code
+
+        return Patient_Transplant.objects.get(id=self.kwargs['tid'])
+
+    def get_context_data(self, **kwargs):
+        context = super(DataAnalysisDetailView, self).get_context_data(**kwargs)
+
+        # passed the patient PK relating to the patient record
+        # print(self.selected_pt_pk)
+        # print(self.selected_transplant_num)
+        # print(self.selected_transplant_type)
+
+        pat_ids = Patient_Identifier.objects.filter(fk_patient_id=Patient.objects.filter(id=self.selected_pt_pk))
+        # transplantType = Transplant_Type.objects.filter(id=self.selected_transplant_type)
+
+        for p in pat_ids:
+            context['analysis_bilirubin'] = Raw_Uploaded_Data.objects.filter(fk_data_type='serum-total-bilirubin-micromol-litre',
+                                                                             fk_pt_identifier_type=p.fk_identifier_type.code,
+                                                                             fk_pt_identifier_type_value=p.pt_identifier_type_value,
+                                                                             fk_transplant_number=self.selected_transplant_num,
+                                                                             fk_transplant_type=self.selected_transplant_type_code
+                                                                            )
+
+            context['analysis_renal_fn'] = Raw_Uploaded_Data.objects.filter(fk_data_type='renal-function-creatinine-clearance',
+                                                                                  fk_pt_identifier_type=p.fk_identifier_type.code,
+                                                                                  fk_pt_identifier_type_value=p.pt_identifier_type_value,
+                                                                                  fk_transplant_number=self.selected_transplant_num,
+                                                                                  fk_transplant_type=self.selected_transplant_type_code
+                                                                                 )
+
+            context['analysis_weight'] = Raw_Uploaded_Data.objects.filter(fk_data_type='weight-kilos',
+                                                                          fk_pt_identifier_type=p.fk_identifier_type.code,
+                                                                          fk_pt_identifier_type_value=p.pt_identifier_type_value,
+                                                                          fk_transplant_number=self.selected_transplant_num,
+                                                                          fk_transplant_type=self.selected_transplant_type_code
+                                                                         )
+
+            context['analysis_blood_alanine_transaminases'] = Raw_Uploaded_Data.objects.filter(
+                                                                          fk_data_type='blood-alanine-transaminases',
+                                                                          fk_pt_identifier_type=p.fk_identifier_type.code,
+                                                                          fk_pt_identifier_type_value=p.pt_identifier_type_value,
+                                                                          fk_transplant_number=self.selected_transplant_num,
+                                                                          fk_transplant_type=self.selected_transplant_type_code
+                                                                          )
+        return context
 
 
 class RawDataListView(ListView):
@@ -12,18 +78,6 @@ class RawDataListView(ListView):
 
     def get_queryset(self):
         return Raw_Uploaded_Data.objects.all()
-
-# class DataTypeCreateView(CreateView):
-#     form_class = parsleyfy(DatatypeCreateUpdateForm)
-#     template_name = '../templates/common/modal-template.html'
-#     view_title = 'Create new data type'
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return redirect('datatype-list')
-#
-#     def form_invalid(self, form):
-#         return self.render_to_response(self.get_context_data(form=form ,))
 
 
 class RawDataProcessingView(ListView):

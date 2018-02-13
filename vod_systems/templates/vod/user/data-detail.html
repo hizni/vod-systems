@@ -1,0 +1,214 @@
+{% extends './vod/vod-base.html' %}
+{% load vod_tags %}
+
+{% block main-content %}
+<div class="panel panel-default">
+    <div class="panel-heading">Transplant Details</div>
+    <div class="panel-body">
+            <table id="detail" class="display" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td> Transplant date </td><td>{{ object.day_zero }}</td>
+                        <td> Start weight </td><td>{{ object.start_weight }}</td>
+                        <td> Start renal function </td><td>{{ object.start_renal_function }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Bilirubin Results</div>
+    <div class="panel-body">
+        <table id="table1" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Data type</th>
+                    <th>Data value</th>
+                    <th>Data date</th>
+                    <th>Grading</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in analysis_bilirubin %}
+                <tr>
+                    <td>{{ i.fk_data_type }}</td>
+                    <td>{{ i.data_value }}</td>
+                    <td>{{ i.data_date  }}</td>
+                    <td>
+                        {% bilirubin_rating i %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Renal Function Results</div>
+    <div class="panel-body">
+        <table id="table2" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Data type</th>
+                    <th>Data value</th>
+                    <th>Data date</th>
+                    <th>Grading</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in analysis_renal_fn %}
+                <tr>
+                    <td>{{ i.fk_data_type }}</td>
+                    <td>{{ i.data_value }}</td>
+                    <td>{{ i.data_date  }}</td>
+                    <td>
+                         {% renal_function_grade i object.start_renal_function %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Weight Measurements
+        <div class="pull-right">
+                <a id="btnWeightData" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="ShowWeightData" href="#">
+                    <span class="glyphicon glyphicon-th-list"> </span> Data
+                </a>
+                <a id="btnWeightChart" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="ShowWeightChart"  href="#">
+                    <span class="glyphicon glyphicon-signal"> </span> Chart
+                </a>
+            </div>
+    </div>
+    <div class="panel-body">
+        <table id="table3" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Data type</th>
+                    <th>Data value</th>
+                    <th>Data date</th>
+                    <th>Grading</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in analysis_weight %}
+                <tr>
+                    <td>{{ i.fk_data_type }}</td>
+                    <td>{{ i.data_value }}</td>
+                    <td>{{ i.data_date  }}</td>
+                    <td>{% weight_grade i object.start_weight %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Blood Alanine Transaminase Results</div>
+    <div class="panel-body">
+        <table id="table4" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Data type</th>
+                    <th>Data value</th>
+                    <th>Data date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in analysis_blood_alanine_transaminases %}
+                <tr>
+                    <td>{{ i.fk_data_type }}</td>
+                    <td>{{ i.data_value }}</td>
+                    <td>{{ i.data_date  }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">VOD diagnosis</div>
+    <div class="panel-body">
+        Classical VOD method outcome: <b>{% classical_vod object.day_zero object.start_weight analysis_bilirubin analysis_weight%}</b>
+        <br>
+        New VOD grading: <b>{% new_vod_severity object.day_zero object.start_weight analysis_bilirubin analysis_weight analysis_renal%}</b>
+
+    </div>
+</div>
+<div class="modal fade" id="modal"></div>
+
+<script>
+
+var table1, table2, table3, table4;
+$(document).ready(function() {
+    //initialising DataTables control
+
+    table1 = $('#table1').DataTable({
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "pageLength": 5,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+    });
+
+    table2 = $('#table2').DataTable({
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "pageLength": 5,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+    });
+
+    table3 = $('#table3').DataTable({
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "pageLength": 5,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+    });
+
+    table4 = $('#table4').DataTable({
+        "bFilter": false, // switch of search functionality
+        "bPaginate": true,  //shows pagination controls
+        "bLengthChange": false,  //show number of entries
+        "bFilter": true,  //allows filtering. If false search bar is not shown
+        "bInfo": true,
+        "bAutoWidth": true,
+        "pageLength": 5,
+        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+    });
+
+} );
+
+//script that handles the viewing of the modal CBVs
+$('#modal').on('show.bs.modal', function (event) {
+
+    var modal = $(this)
+    $.ajax({
+        url: $(event.relatedTarget).attr('href'),
+        context: document.body
+    }).done(function(response) {
+        modal.html(response);
+        $(this).removeData('bs.modal');
+    });
+});
+
+</script>
+{% endblock %}
