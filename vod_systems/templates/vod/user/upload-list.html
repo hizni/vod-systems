@@ -6,6 +6,16 @@
     <div class="panel-body">
          <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+             <label for="lblTemplate">Select the upload profile to be used:</label>
+             <select id ="selectTemplate" name="selectTemplate" class="selectpicker" data-width="auto">
+                {% if user_institutions_list|length > 1 %}
+                    <option value="all">Show all...</option>
+                {% endif %}
+                {% for i in templates_list %}
+                    <option value="{{ i.id }}">{{ i.profile_name }}</option>
+                {% endfor %}
+             </select>
+             <br><br>
              <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-primary">
@@ -14,17 +24,7 @@
                 </label>
                 <input class="form-control" readonly>
             </div>
-
-             <label for="lblTemplate">Select the upload template to be used:</label>
-             <select id ="selectTemplate" name="selectTemplate">
-                {% if user_institutions_list|length > 1 %}
-                    <option value="all">Show all...</option>
-                {% endif %}
-                {% for i in templates_list %}
-                    <option value="{{ i.id }}">{{ i.profile_name }}</option>
-                {% endfor %}
-             </select>
-             <br>
+            <br>
              <div class="pull-right">
                  <button id="btnGoUpload" class="btn btn-success" type="submit">Upload Data</button>
              </div>
@@ -59,7 +59,6 @@
                         <td>{{ i.outcome }}</td>
                         <td>{{ i.uploaded_by }}</td>
                         <td>
-                            <a class="btn btn-info btn-xs" href="{% url 'data-analysis' id=i.id %}"><span class="glyphicon glyphicon-list"/></a>
 {#                            <a class="btn btn-info btn-xs" href="{% url 'data-complete' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-list"/></a>#}
 {#                            <a class="btn btn-danger btn-xs" href="{% url 'data-valid' id=i.id %}" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-check"/></a>#}
                         </td>

@@ -1,6 +1,6 @@
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.shortcuts import render, redirect,HttpResponseRedirect
-from models import User_Institution, Institution, Datatype, Transplant_Type, Alias_Identifier, Data_Cleansing_Template, User, Patient, Patient_Identifier, Patient_Transplant
+from models import User_Institution, Institution, Datatype, Transplant_Type, Alias_Identifier, Data_Cleansing_Template, User, Patient, Patient_Identifier, Patient_Transplant, Raw_Uploaded_Data
 from django.core.urlresolvers import reverse
 
 from patient_forms import PatientCreateUpdateForm, PatientRetireForm, PatientAliasCreateForm, \
@@ -58,7 +58,12 @@ class PatientIdentifiersDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PatientIdentifiersDetailView, self).get_context_data(**kwargs)
         context['patient_ids'] = Patient_Identifier.objects.filter(fk_patient_id=self.kwargs['id'])
-        context['patient_transplants'] = Patient_Transplant.objects.filter(fk_patient_id=self.kwargs['id'])
+        patient_transplants = Patient_Transplant.objects.filter(fk_patient_id=self.kwargs['id'])
+        context['patient_transplants'] = patient_transplants
+        for transplant in patient_transplants:
+            data_captured = Raw_Uploaded_Data.objects.filter(fk_transplant_number=transplant.number, fk_transplant_type=transplant.fk_transplant_type.code)
+            context['data_captured'] = data_captured
+
         return context
 
 

@@ -4,32 +4,33 @@
 <div class="panel panel-default">
     <div class="panel-heading">Patient Details</div>
     <div class="panel-body">
-            <table id="detail" class="display" cellspacing="0" width="100%">
-                <tbody>
-                    <tr>
-                        <td> Id </td><td>{{ object.id }}</td>
-                        <td> Forename </td><td>{{ object.first_name }}</td>
-                        <td> Surname </td><td>{{ object.surname }}</td>
-                    </tr>
-                    <tr>
-                        <td> Gender </td><td>{{ object.gender }}</td>
-                        <td> Date of Birth </td><td>{{ object.date_of_birth }}</td>
-                        <td> Date of Death </td><td>{{ object.date_of_death }}</td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <table width="100%">
+          <tr>
+            <td rowspan="2"> <p style="font-size:22px">{{ object.first_name }} <b>{{ object.surname }}</b></p> </td>
+            <td> Gender: {{ object.gender}} </td>
+          </tr>
+          <tr>
+            <td rowspan="2">Date of Birth: {{ object.date_of_birth }} </td>
+          </tr>
+          <tr>
+            <td rowspan="2"></td>
+          </tr>
+          <tr>
+            <td>Date of Death: {{ object.date_of_death }}</td>
+          </tr>
+        </table>
 
     </div>
 </div>
 <div class="panel panel-default">
     <div class="panel-heading">Patient Aliases
         <div class="pull-right">
-                    <a id="btnAddAlias" data-id="{{ object.id }}" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias' id=object.id%}">
-                        <span class="glyphicon glyphicon-plus-sign"> </span>
-                        Add Alias
-                    </a>
-                </div>
+            <a id="btnAddAlias" data-id="{{ object.id }}" class="btn btn-success btn-xs" aria-expanded="true" aria-controls="CreatePatientAlias" data-toggle="modal" data-target="#modal" href="{% url 'patient-create-alias' id=object.id%}">
+                <span class="glyphicon glyphicon-plus-sign"> </span> Add Alias
+            </a>
         </div>
+    </div>
     <div class="panel-body">
         Patient treated at:  {{ object.fk_institution_id.description }}
 
@@ -50,7 +51,7 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-            </table>
+        </table>
     </div>
 </div>
 <div class="panel panel-default">
@@ -71,21 +72,23 @@
                     <th>Day zero</th>
                     <th>Start weight</th>
                     <th>Renal function</th>
-                    <th>Data points</th>
-                    <th>Renal function</th>
+                    <th>Data points captured</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for i in patient_transplants %}
-                <tr>
-                    <td>{{ i.fk_transplant_type.description }}</td>
-                    <td>{{ i.number }}</td>
-                    <td>{{ i.day_zero }}</td>
-                    <td>{{ i.start_weight }}</td>
-                    <td>{{ i.start_renal_function }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
+
+                    <tr>
+                        <td>{{ i.fk_transplant_type.description }}</td>
+                        <td>{{ i.number }}</td>
+                        <td>{{ i.day_zero }}</td>
+                        <td>{{ i.start_weight }}</td>
+                        <td>{{ i.start_renal_function }}</td>
+                        <td>{{ data_captured.count }}</td>
+{#                        <td><a class="btn btn-info btn-xs" href="{% url 'data-analysis-detail' id=i.fk_patient_id.id tnum=i.number ttid=i.fk_transplant_type.id%}">Analysis</a></td>#}
+                        <td><a class="btn btn-info btn-xs" href="{% url 'data-analysis-detail' id=i.fk_patient_id.id tid=i.id%}">Analysis</a></td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -6,12 +6,15 @@
     <div class="panel-heading">Create Data Upload Profile</div>
     <div class="panel-body">
         <p>
-            Select a VOD data file to produce a skeleton data cleaning template that you will need to flesh out
+            Select a VOD data file to produce a skeleton data handling template that you will need to flesh out. <br>
+            This template handles which fields will be populated in the target data table in the underlying database and the
+            approach that will be applied <i>if</i> cleansing is chosen to be performed on the uploaded data. <br>
+            This is not mandatory, but it <b>can</b> improve the quality of the data held making analysis easier and more valuable.
         </p>
          <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
              <label for="lblTemplateInst">Template applies to data from:</label>
-             <select id ="selectInst" name="selectInst">
+             <select id ="selectInst" name="selectInst"class="selectpicker" data-width="auto">
                 {% if user_institutions_list|length > 1 %}
                     <option value="all">Show all...</option>
                 {% endif %}

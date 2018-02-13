@@ -12,7 +12,7 @@
             <br>
             Show me patients belonging to
             <!-- todo add an ALL function to show all patients that a user can see on all INSTITUTIONS they have permission to -->
-            <select id ="selectInst" name="selectInst">
+            <select id ="selectInst" name="selectInst" class="selectpicker" data-width="auto">
                 {% if user_institutions_list|length > 1 %}
                     <option value="all">Show all...</option>
                 {% endif %}
@@ -77,7 +77,8 @@ $(document).ready(function() {
         "bFilter": true,  //allows filtering. If false search bar is not shown
         "bInfo": true,
         "bAutoWidth": true,
-        "sDom": '<"top">rt<"bottom"ilp><"clear">'
+        "sDom": '<"top">rt<"bottom"ilp><"clear">',
+
     });
 
 } );
